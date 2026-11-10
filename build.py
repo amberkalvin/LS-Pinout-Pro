@@ -18,6 +18,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 SRC_DIR = ROOT / "src"
 ANDROID_APP = ROOT / "android_app" / "app" / "src" / "main"
+IOS_WEBAPP_DIR = ROOT / "ios_app" / "LSPinoutPro" / "WebApp"
+IOS_PWA_DIR = ROOT / "ios_pwa"
 
 
 def build_html_bundles() -> None:
@@ -41,6 +43,23 @@ def build_html_bundles() -> None:
 
     (ROOT / "LS_Swap_iOS_Mobile_Preview.html").write_text(mobile_out, encoding="utf-8")
     (ANDROID_APP / "assets" / "index.html").write_text(mobile_out, encoding="utf-8")
+    IOS_WEBAPP_DIR.mkdir(parents=True, exist_ok=True)
+    (IOS_WEBAPP_DIR / "index.html").write_text(mobile_out, encoding="utf-8")
+
+    IOS_PWA_DIR.mkdir(parents=True, exist_ok=True)
+    pwa_head = (
+        '<link rel="manifest" href="manifest.json">\n'
+        '<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">\n'
+        "</head>"
+    )
+    pwa_sw = (
+        '<script>if("serviceWorker" in navigator && location.protocol.startsWith("http"))'
+        '{window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));}</script>\n'
+        "</body>"
+    )
+    pwa_out = mobile_out.replace("</head>", pwa_head, 1).replace("</body>", pwa_sw, 1)
+    (IOS_PWA_DIR / "index.html").write_text(pwa_out, encoding="utf-8")
+
     (ROOT / "LS_Swap_Pinout_Master.html").write_text(desktop_out, encoding="utf-8")
 
     total_conns = sum(len(e["connectors"]) for e in data["ecms"])

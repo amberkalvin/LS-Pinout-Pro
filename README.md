@@ -3,11 +3,16 @@
 A 100% self-contained, offline standalone application containing **2,537 circuit pinout entries** across **45 factory OEM-shaped connectors** and **12 major GM ECM / PCM / TCM families** sourced from `lt1swap.com` and GM / Aptiv / Molex / Kostal factory service specifications.
 
 ## How to Launch / Install
+- **Native iOS App (`ios_app/` — iPhone & iPad Universal, iOS 15.0+):**
+  - **Xcode Build / Direct Device Install:** Open **`ios_app/LSPinoutPro.xcodeproj`** in Xcode on macOS, select your Apple ID under *Signing & Capabilities*, and press **Run (`⌘R`)** to install directly onto your iPhone or iPad.
+  - **One-Command `.ipa` Builder (AltStore / SideStore / Sideloadly):** On macOS, run `./ios_app/build_ipa.sh` to compile `LS_Pinout_Pro_iOS_Dark.ipa`. Features native `UIImpactFeedbackGenerator` haptics, `UserDefaults` storage backup, left-edge swipe navigation, dark `UIAlertController` dialogs, and iPad-safe `UIActivityViewController` JSON file sharing.
+- **Instant iOS Home Screen App — No Mac Required (`ios_pwa/`):** Host or serve **`ios_pwa/`** and open it in Safari on any iPhone or iPad, then tap **Share ➔ Add to Home Screen**. Installs with the custom 180×180 OEM Connector App Icon, full-screen notched Dark Mode (`black-translucent`), and 100% offline Service Worker caching (`sw.js`).
 - **Android APK (v2.1.0 — Exact OEM Connector Edition):** Install **`LS_Pinout_Pro_iOS_Dark.apk`** directly on any Android phone or tablet (Android 7.0+ / API 24–34, signed with v1/v2/v3 APK Signature Schemes). Works 100% offline in the shop with exact vector OEM connector housings, bank zoom on wide 80-pin plugs, plain-English filter chips, haptic feedback, native share export, and persistent wire check-offs.
 - **Mobile UI Preview on Desktop:** Open **`LS_Swap_iOS_Mobile_Preview.html`** in any browser to test or use the mobile experience directly on your computer.
 - **Standalone Desktop Window:** Double-click **`Launch_LS_Pinout_Master.bat`** to open the full desktop workbench in its own dedicated application window.
 - **Direct Portable Desktop File:** Double-click **`LS_Swap_Pinout_Master.html`** in any browser.
 - **Android Source Project:** **`android_app/`** contains the full Android Studio / SDK source project (`com.lt1swap.pinoutmaster`).
+- **iOS Source Project:** **`ios_app/`** contains the full native Swift 5 (`UIKit` + `WebKit`) Xcode project (`LSPinoutPro.xcodeproj` & `project.yml`).
 - **Modular Web & SVG Engine Sources:** **`src/`** contains the modular OEM connector SVG engine (`shared_engine.js`) and UI templates (`mobile_template.html`, `desktop_template.html`), compiled via **`build.py`**.
 - **Raw JSON Database:** **`pinout_data.json`** contains the complete structured JSON dataset of all 12 ECM families and 45 connectors with explicit OEM `layoutType` definitions (`pcm_80`, `mx123_80`, `mx123_73`, `mx123_56`, `t42_49`, `fuseblock_c2`, `c100_16`, `round_16`, `round_20`, `grid_40`, `grid_50`, `lt1_32`, `vcm_24`).
 

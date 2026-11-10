@@ -3,6 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="LS Pinout Pro">
+<meta name="theme-color" content="#0B0D12">
 <title>LS Swap Pinout Pro</title>
 <style>
   :root {
@@ -31,6 +36,12 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  html {
+    background-color: var(--bg);
+    -webkit-text-size-adjust: 100%;
+    overscroll-behavior-y: none;
+  }
+
   body {
     margin: 0;
     padding: 0;
@@ -40,8 +51,21 @@
     font-size: 15px;
     line-height: 1.45;
     overflow-x: hidden;
+    overscroll-behavior-y: none;
     padding-bottom: calc(80px + var(--safe-bottom));
+    -webkit-user-select: none;
     user-select: none;
+  }
+
+  input, textarea, .code-diagram {
+    -webkit-user-select: text;
+    user-select: text;
+  }
+
+  @supports (-webkit-touch-callout: none) {
+    input, select, textarea {
+      font-size: 16px !important;
+    }
   }
 
   /* Compact Sticky Top Bar */
@@ -2011,16 +2035,31 @@ function loadSavedSetup() {
   } catch (e) {}
 }
 
+function postNativeIOS(payload) {
+  try {
+    if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.iOSBridge) {
+      window.webkit.messageHandlers.iOSBridge.postMessage(payload);
+      return true;
+    }
+  } catch (e) {}
+  return false;
+}
+
 function saveSetup() {
   try {
     const cfg = getMobileCfg();
     cfg.ecmIdx = curEcmIdx;
-    localStorage.setItem("ls_swap_config_v2", JSON.stringify(cfg));
+    const raw = JSON.stringify(cfg);
+    localStorage.setItem("ls_swap_config_v2", raw);
+    postNativeIOS({ action: "syncStorage", key: "ls_swap_config_v2", value: raw });
   } catch (e) {}
 }
 
-function triggerHaptic() {
+function triggerHaptic(style) {
   try {
+    if (postNativeIOS({ action: "hapticTap", style: style || "light" })) {
+      return;
+    }
     if (window.AndroidBridge && window.AndroidBridge.hapticTap) {
       window.AndroidBridge.hapticTap();
     } else if (navigator.vibrate) {
@@ -2031,7 +2070,9 @@ function triggerHaptic() {
 
 function saveProgress() {
   try {
-    localStorage.setItem("ls_swap_pinout_progress_v1", JSON.stringify(progressState));
+    const raw = JSON.stringify(progressState);
+    localStorage.setItem("ls_swap_pinout_progress_v1", raw);
+    postNativeIOS({ action: "syncStorage", key: "ls_swap_pinout_progress_v1", value: raw });
   } catch (e) {}
   updateProgressSummary();
 }
@@ -2466,10 +2507,20 @@ function resetCurrentProgress() {
 }
 
 function shareOrExportBuild() {
-  triggerHaptic();
+  triggerHaptic("medium");
   const payload = JSON.stringify({ config: getMobileCfg(), progress: progressState }, null, 2);
+  if (postNativeIOS({
+    action: "shareFile",
+    title: "LS Swap Harness Progress",
+    filename: "LS_Swap_Harness_Progress.json",
+    content: payload
+  })) {
+    return;
+  }
   if (window.AndroidBridge && window.AndroidBridge.shareText) {
     window.AndroidBridge.shareText("LS Swap Harness Progress", payload);
+  } else if (navigator.share) {
+    navigator.share({ title: "LS Swap Harness Progress", text: payload }).catch(() => {});
   } else {
     const blob = new Blob([payload], { type: "application/json" });
     const a = document.createElement("a");

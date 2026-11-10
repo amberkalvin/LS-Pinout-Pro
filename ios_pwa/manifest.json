@@ -1,0 +1,25 @@
+{
+  "name": "LS Pinout Pro",
+  "short_name": "LS Pinout",
+  "description": "Offline GM LS / LT Swap Interactive ECM, PCM & TCM Pinout Master (45 Exact OEM Connectors / 2,537 Pins)",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0B0D12",
+  "theme_color": "#0B0D12",
+  "icons": [
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

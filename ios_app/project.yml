@@ -1,0 +1,36 @@
+name: LSPinoutPro
+options:
+  bundleIdPrefix: com.lt1swap
+  deploymentTarget:
+    iOS: "15.0"
+  generateEmptyDirectories: true
+settings:
+  base:
+    MARKETING_VERSION: 2.1.0
+    CURRENT_PROJECT_VERSION: 3
+    SWIFT_VERSION: "5.9"
+targets:
+  LSPinoutPro:
+    type: application
+    platform: iOS
+    deploymentTarget: "15.0"
+    sources:
+      - path: LSPinoutPro
+        excludes:
+          - WebApp
+          - Info.plist
+      - path: LSPinoutPro/WebApp
+        type: folder
+        buildPhase: resources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.lt1swap.pinoutmaster
+        PRODUCT_NAME: LSPinoutPro
+        INFOPLIST_FILE: LSPinoutPro/Info.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        TARGETED_DEVICE_FAMILY: "1,2"
+        GENERATE_INFOPLIST_FILE: NO
+        SUPPORTS_MACCATALYST: NO
+    scheme:
+      testTargets: []

@@ -5,6 +5,13 @@ local.properties
 *.iml
 .idea/
 
+# Xcode / iOS temporary build artifacts
+DerivedData/
+.derivedData/
+.ipa_stage/
+**/xcuserdata/
+*.xcworkspace/xcuserdata/
+
 # Python / temporary build caches
 __pycache__/
 *.pyc
