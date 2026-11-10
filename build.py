@@ -11,6 +11,7 @@ import os
 import re
 import shutil
 import subprocess
+import sys
 import tempfile
 import zipfile
 from pathlib import Path
@@ -154,4 +155,5 @@ def build_apk_if_sdk_available() -> None:
 
 if __name__ == "__main__":
     build_html_bundles()
-    build_apk_if_sdk_available()
+    if "--html-only" not in sys.argv:
+        build_apk_if_sdk_available()

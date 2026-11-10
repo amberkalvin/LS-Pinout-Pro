@@ -9,7 +9,7 @@ IPA_STAGE="$SCRIPT_DIR/.ipa_stage"
 OUT_IPA="$ROOT_DIR/LS_Pinout_Pro_iOS_Dark.ipa"
 
 echo "[1/3] Rebuilding embedded offline HTML bundle..."
-python3 "$ROOT_DIR/build.py"
+python3 "$ROOT_DIR/build.py" --html-only
 
 echo "[2/3] Compiling Release iOS ARM64 app via xcodebuild..."
 rm -rf "$DERIVED" "$IPA_STAGE"
@@ -30,9 +30,10 @@ if [ ! -d "$APP_PATH" ]; then
   exit 1
 fi
 
-echo "[3/3] Packaging Payload/LSPinoutPro.app into $OUT_IPA..."
+echo "[3/3] Ad-hoc signing Mach-O bundle and packaging Payload/LSPinoutPro.app into $OUT_IPA..."
 mkdir -p "$IPA_STAGE/Payload"
 cp -R "$APP_PATH" "$IPA_STAGE/Payload/LSPinoutPro.app"
+codesign --force --deep --sign - "$IPA_STAGE/Payload/LSPinoutPro.app"
 (
   cd "$IPA_STAGE"
   zip -qry "$OUT_IPA" Payload

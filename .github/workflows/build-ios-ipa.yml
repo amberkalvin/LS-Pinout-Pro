@@ -1,0 +1,85 @@
+name: Build iOS IPA
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'ios_app/**'
+      - 'src/**'
+      - 'pinout_data.json'
+      - 'build.py'
+      - '.github/workflows/build-ios-ipa.yml'
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'GitHub Release tag to attach LS_Pinout_Pro_iOS_Dark.ipa to'
+        required: false
+        default: 'v2.1.0'
+
+permissions:
+  contents: write
+
+jobs:
+  build-ipa:
+    name: Build & Package iOS ARM64 IPA
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Build Release ARM64 IPA
+        run: |
+          chmod +x ./ios_app/build_ipa.sh
+          ./ios_app/build_ipa.sh
+
+      - name: Verify IPA bundle contents & ARM64 binary
+        run: |
+          test -f LS_Pinout_Pro_iOS_Dark.ipa
+          VERIFY_DIR="$(mktemp -d)"
+          unzip -q LS_Pinout_Pro_iOS_Dark.ipa -d "$VERIFY_DIR"
+          BIN="$VERIFY_DIR/Payload/LSPinoutPro.app/LSPinoutPro"
+          HTML="$VERIFY_DIR/Payload/LSPinoutPro.app/WebApp/index.html"
+          PLIST="$VERIFY_DIR/Payload/LSPinoutPro.app/Info.plist"
+          test -f "$BIN"
+          test -f "$HTML"
+          test -f "$PLIST"
+          lipo -info "$BIN"
+          lipo -info "$BIN" | grep -q "arm64"
+          plutil -lint "$PLIST"
+          echo "Verified IPA size: $(wc -c < LS_Pinout_Pro_iOS_Dark.ipa) bytes"
+          rm -rf "$VERIFY_DIR"
+
+      - name: Verify iOS Simulator compilation
+        run: |
+          xcodebuild \
+            -project ios_app/LSPinoutPro.xcodeproj \
+            -scheme LSPinoutPro \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            build
+
+      - name: Upload IPA workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: LS_Pinout_Pro_iOS_Dark-ipa
+          path: LS_Pinout_Pro_iOS_Dark.ipa
+          if-no-files-found: error
+
+      - name: Attach IPA to GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${{ inputs.release_tag || 'v2.1.0' }}"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" LS_Pinout_Pro_iOS_Dark.ipa --clobber
+            echo "Uploaded LS_Pinout_Pro_iOS_Dark.ipa to release $TAG"
+          else
+            echo "Release $TAG not found; skipping release upload."
+          fi
