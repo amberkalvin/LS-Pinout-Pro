@@ -1,0 +1,16 @@
+# Gradle / Android Studio build artifacts
+.gradle/
+**/build/
+local.properties
+*.iml
+.idea/
+
+# Python / temporary build caches
+__pycache__/
+*.pyc
+.apk_build/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+desktop.ini

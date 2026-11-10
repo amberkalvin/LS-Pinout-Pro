@@ -1,0 +1,1937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LS &amp; LT Swap Pinout Pro — OEM Connector &amp; Harness Studio</title>
+<style>
+  :root {
+    --bg: #0B0D12;
+    --panel: #131722;
+    --card: #191F2E;
+    --hover: #21293C;
+    --border: rgba(255, 255, 255, 0.09);
+    --border-strong: rgba(255, 255, 255, 0.16);
+    --text: #F8FAFC;
+    --text-2: #CBD5E1;
+    --muted: #8B98AD;
+    --accent: #38BDF8;
+    --accent-solid: #0284C7;
+    --cyan: #22D3EE;
+    --green: #34D399;
+    --purple: #C084FC;
+    --amber: #FBBF24;
+    --rose: #FB7185;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.45;
+    overflow-x: hidden;
+  }
+
+  /* Compact Sticky App Header */
+  .app-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(11, 13, 18, 0.92);
+    backdrop-filter: saturate(180%) blur(16px);
+    -webkit-backdrop-filter: saturate(180%) blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 20px 0;
+  }
+
+  .header-inner {
+    max-width: 1640px;
+    margin: 0 auto;
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+    padding-bottom: 10px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .brand-mark {
+    background: linear-gradient(135deg, #0284C7, #2563EB);
+    color: #FFFFFF;
+    font-weight: 800;
+    font-size: 12px;
+    letter-spacing: 0.6px;
+    padding: 6px 10px;
+    border-radius: 8px;
+  }
+
+  .brand-title h1 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    color: #FFFFFF;
+  }
+
+  .brand-title p {
+    margin: 1px 0 0;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .progress-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-2);
+  }
+  .progress-mini-track {
+    width: 64px;
+    height: 6px;
+    background: var(--card);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .progress-mini-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent), var(--green));
+    transition: width 0.2s ease;
+  }
+
+  .btn {
+    background: var(--panel);
+    color: var(--text-2);
+    border: 1px solid var(--border);
+    padding: 7px 12px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.14s ease;
+  }
+  .btn:hover {
+    background: var(--card);
+    border-color: var(--border-strong);
+    color: #FFFFFF;
+  }
+  .btn-primary {
+    background: var(--accent-solid);
+    border-color: #38BDF8;
+    color: #FFFFFF;
+  }
+  .btn-primary:hover {
+    background: #0369A1;
+  }
+
+  /* Navigation Tabs */
+  .nav-tabs {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav-tabs::-webkit-scrollbar { display: none; }
+
+  .nav-tab {
+    background: transparent;
+    color: var(--muted);
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 9px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.14s, border-color 0.14s;
+  }
+  .nav-tab:hover { color: var(--text); }
+  .nav-tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  /* Main Layout */
+  .main-container {
+    max-width: 1640px;
+    margin: 0 auto;
+    padding: 16px 20px 44px;
+  }
+
+  .tab-view { display: none; }
+  .tab-view.active { display: block; }
+
+  /* Compact Swap Setup Strip */
+  .setup-bar {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 10px;
+    align-items: end;
+  }
+  @media (max-width: 1100px) {
+    .setup-bar { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+  }
+
+  .cfg-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+  .cfg-field label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .cfg-field select {
+    width: 100%;
+    background: var(--card);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 7px 9px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    font-weight: 600;
+    outline: none;
+    cursor: pointer;
+  }
+  .cfg-field select:focus { border-color: var(--accent); }
+
+  /* Explorer Two-Column Layout */
+  .explorer-grid {
+    display: grid;
+    grid-template-columns: 270px minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
+  }
+  @media (max-width: 1024px) {
+    .explorer-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Left Controller Sidebar */
+  .ecm-sidebar {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px;
+    position: sticky;
+    top: 108px;
+    max-height: calc(100vh - 124px);
+    overflow-y: auto;
+  }
+  @media (max-width: 1024px) {
+    .ecm-sidebar {
+      position: static;
+      max-height: 240px;
+    }
+  }
+
+  .sidebar-heading {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--muted);
+    padding: 4px 8px 8px;
+  }
+
+  .ecm-item {
+    padding: 9px 10px;
+    border-radius: 9px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    margin-bottom: 4px;
+    transition: all 0.12s ease;
+  }
+  .ecm-item:hover { background: var(--card); }
+  .ecm-item.active {
+    background: rgba(56, 189, 248, 0.12);
+    border-color: rgba(56, 189, 248, 0.45);
+  }
+  .ecm-item-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+  }
+  .ecm-item-title {
+    font-weight: 700;
+    font-size: 13px;
+    color: #FFFFFF;
+  }
+  .ecm-gen-tag {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 5px;
+    background: var(--card);
+    color: var(--accent);
+    white-space: nowrap;
+  }
+  .ecm-item-sub {
+    font-size: 11.5px;
+    color: var(--muted);
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Compact ECM Summary Header */
+  .ecm-summary-bar {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+  }
+  .ecm-summary-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .ecm-summary-title {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 800;
+    color: #FFFFFF;
+  }
+  .ecm-quick-pills {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .q-pill {
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 4px 9px;
+    border-radius: 6px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text-2);
+  }
+  .ecm-details-toggle {
+    margin-top: 8px;
+  }
+  .ecm-details-toggle summary {
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    user-select: none;
+  }
+  .ecm-details-body {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+    font-size: 12.5px;
+    color: var(--text-2);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 10px;
+  }
+
+  /* Connector Selector Pills */
+  .connector-tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .conn-btn {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    color: var(--text-2);
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.14s ease;
+  }
+  .conn-btn:hover {
+    background: var(--card);
+    color: #FFFFFF;
+  }
+  .conn-btn.active {
+    background: rgba(56, 189, 248, 0.14);
+    border-color: var(--accent);
+    color: #FFFFFF;
+  }
+  .conn-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot-blue { background: #3B82F6; box-shadow: 0 0 6px rgba(59,130,246,0.8); }
+  .dot-red { background: #EF4444; box-shadow: 0 0 6px rgba(239,68,68,0.8); }
+  .dot-green { background: #22C55E; box-shadow: 0 0 6px rgba(34,197,94,0.8); }
+  .dot-black { background: #52525B; border: 1px solid #A1A1AA; }
+  .dot-gray { background: #CBD5E1; }
+  .dot-clear { background: rgba(248, 250, 252, 0.9); border: 1.5px solid #94A3B8; box-shadow: 0 0 6px rgba(248,250,252,0.55); }
+
+  /* Factory OEM Connector SVG Card */
+  .connector-panel {
+    background: var(--panel);
+    border: 1px solid var(--border-strong);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+  }
+
+  .connector-panel-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+
+  .connector-heading-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: #FFFFFF;
+  }
+  .connector-heading-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+
+  .connector-controls-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .bank-bar {
+    display: inline-flex;
+    gap: 3px;
+    background: #080A0F;
+    padding: 3px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  .bank-btn {
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+  .bank-btn.active {
+    background: var(--card);
+    color: #FFFFFF;
+  }
+
+  .svg-stage {
+    width: 100%;
+    background: #07090E;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 11px;
+    padding: 10px 12px;
+    overflow: hidden;
+  }
+  .svg-pin-node:hover rect,
+  .svg-pin-node:hover circle {
+    filter: brightness(1.25);
+  }
+
+  /* Plain-English Filter Chips */
+  .filter-chip-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+  .chip-group {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .f-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 11px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    background: var(--card);
+    color: var(--text-2);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.12s ease;
+  }
+  .f-chip:hover { border-color: var(--border-strong); color: #FFFFFF; }
+  .f-chip.active {
+    background: #FFFFFF;
+    color: #090B10;
+    border-color: #FFFFFF;
+  }
+  .f-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  /* Selected Cavity Inspector */
+  .pin-inspector {
+    margin-top: 10px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 14px;
+  }
+  .inspector-grid {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  /* Search & Filter Toolbar */
+  .table-toolbar {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+  }
+
+  .search-input {
+    flex: 1;
+    min-width: 240px;
+    background: var(--bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+    outline: none;
+  }
+  .search-input:focus { border-color: var(--accent); }
+
+  .toolbar-select {
+    background: var(--card);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 7px 10px;
+    border-radius: 8px;
+    font-size: 12.5px;
+    font-weight: 600;
+    outline: none;
+  }
+
+  .toggle-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-2);
+    cursor: pointer;
+    user-select: none;
+    padding: 4px 6px;
+  }
+
+  /* Circuit Table */
+  .table-wrap {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow-x: auto;
+  }
+
+  table.pin-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+  }
+
+  table.pin-table th {
+    background: #0E121B;
+    color: var(--muted);
+    padding: 10px 12px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  table.pin-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    vertical-align: middle;
+  }
+
+  table.pin-table tbody tr {
+    cursor: pointer;
+    transition: background 0.1s ease;
+  }
+  table.pin-table tbody tr:hover { background: var(--hover); }
+  table.pin-table tbody tr.row-selected {
+    background: rgba(56, 189, 248, 0.14) !important;
+  }
+  table.pin-table tbody tr.row-done { opacity: 0.45; }
+
+  /* Plain-English Action Badges */
+  .verdict-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 9px;
+    border-radius: 6px;
+    font-size: 11.5px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .verdict-external { background: rgba(34, 211, 238, 0.14); color: var(--cyan); border: 1px solid rgba(34, 211, 238, 0.35); }
+  .verdict-keep     { background: rgba(52, 211, 153, 0.14); color: var(--green); border: 1px solid rgba(52, 211, 153, 0.35); }
+  .verdict-repin    { background: rgba(251, 113, 133, 0.16); color: var(--rose); border: 1px solid rgba(251, 113, 133, 0.42); }
+  .verdict-trans    { background: rgba(192, 132, 252, 0.14); color: var(--purple); border: 1px solid rgba(192, 132, 252, 0.35); }
+  .verdict-remove   { background: rgba(251, 191, 36, 0.14); color: var(--amber); border: 1px solid rgba(251, 191, 36, 0.35); }
+  .verdict-empty    { background: rgba(148, 163, 184, 0.08); color: var(--muted); border: 1px solid rgba(148, 163, 184, 0.2); }
+
+  /* Wire Color Pill */
+  .wire-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: "JetBrains Mono", Consolas, monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .wire-swatch {
+    width: 22px;
+    height: 12px;
+    border-radius: 3px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  .user-note-input {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 5px 9px;
+    border-radius: 6px;
+    font-size: 12px;
+    width: 100%;
+    margin-top: 6px;
+    outline: none;
+  }
+  .user-note-input:focus { border-color: var(--accent); }
+
+  /* Guide & Wizard Cards */
+  .section-intro {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 14px;
+  }
+  .section-intro h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+  }
+  .section-intro p {
+    margin: 4px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .guide-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
+    gap: 14px;
+  }
+  @media (max-width: 680px) {
+    .guide-grid { grid-template-columns: 1fr; }
+  }
+
+  .guide-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+  .guide-card h3 {
+    margin: 0 0 8px;
+    color: #FFFFFF;
+    font-size: 15.5px;
+    font-weight: 800;
+  }
+
+  .schematic-box {
+    background: #080A10;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 12px;
+    color: var(--text-2);
+    overflow-x: auto;
+    white-space: pre;
+    line-height: 1.4;
+    margin: 10px 0;
+  }
+
+  .mini-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    margin-top: 8px;
+  }
+  .mini-table th, .mini-table td {
+    border: 1px solid var(--border);
+    padding: 7px 10px;
+    text-align: left;
+  }
+  .mini-table th {
+    background: #0E121B;
+    color: var(--muted);
+    font-size: 11px;
+    text-transform: uppercase;
+  }
+
+  .alert-box {
+    background: rgba(251, 191, 36, 0.1);
+    border-left: 3px solid var(--amber);
+    padding: 9px 12px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    color: var(--text-2);
+    margin: 10px 0 0;
+  }
+  .alert-danger {
+    background: rgba(251, 113, 133, 0.12);
+    border-left-color: var(--rose);
+  }
+  .alert-info {
+    background: rgba(56, 189, 248, 0.1);
+    border-left-color: var(--accent);
+  }
+
+  @media print {
+    .app-header, .ecm-sidebar, .setup-bar, .table-toolbar, .connector-controls-right, .filter-chip-row { display: none !important; }
+    .explorer-grid { display: block !important; }
+    body { background: #FFFFFF; color: #000000; }
+    .connector-panel, .table-wrap, .ecm-summary-bar { border: 1px solid #000000; background: #FFFFFF; color: #000000; }
+    table.pin-table th, table.pin-table td { border: 1px solid #CCCCCC; color: #000000; }
+  }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="header-inner">
+    <div class="header-top">
+      <div class="brand">
+        <div class="brand-mark">LS / LT PRO v2.1</div>
+        <div class="brand-title">
+          <h1>GM LS &amp; LT Swap Pinout &amp; Standalone Harness Studio</h1>
+          <p>OEM Factory Connector Shapes &bull; 12 Controller Families &bull; 45 Connectors &bull; 100% Offline</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <div class="progress-pill" title="Checked wires on active controller">
+          <span id="hdrProgressText">0 / 0 Done</span>
+          <div class="progress-mini-track"><div id="hdrProgressFill" class="progress-mini-fill"></div></div>
+        </div>
+        <button class="btn" onclick="exportProgressJSON()" title="Save checked wires &amp; notes to JSON">💾 Save Build</button>
+        <button class="btn" onclick="document.getElementById('importFile').click()" title="Load saved build JSON">📂 Load</button>
+        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importProgressJSON(event)">
+        <button class="btn" onclick="exportCurrentCSV()" title="Export current connector to CSV">📊 CSV</button>
+        <button class="btn btn-primary" onclick="window.print()">🖨️ Print Sheet</button>
+      </div>
+    </div>
+
+    <nav class="nav-tabs">
+      <button class="nav-tab active" onclick="switchTab('explorer', this)">1. Connector Pinouts</button>
+      <button class="nav-tab" onclick="switchTab('fuseblock', this)">2. Fuse Block &amp; OBD2</button>
+      <button class="nav-tab" onclick="switchTab('wizards', this)">3. Repin Wizards (4L80E / 0411 / DBC)</button>
+      <button class="nav-tab" onclick="switchTab('sensors', this)">4. Sensors, Injectors &amp; Pedals</button>
+      <button class="nav-tab" onclick="switchTab('troubleshoot', this)">5. Fix No-Start</button>
+      <button class="nav-tab" onclick="switchTab('compare', this)">6. ECM Compare</button>
+    </nav>
+  </div>
+</header>
+
+<main class="main-container">
+
+  <!-- ===================================================================== -->
+  <!-- TAB 1: INTERACTIVE OEM CONNECTOR PINOUT EXPLORER                      -->
+  <!-- ===================================================================== -->
+  <section id="tab-explorer" class="tab-view active">
+
+    <!-- Compact Swap Profile Strip -->
+    <div class="setup-bar">
+      <div class="cfg-field">
+        <label>Transmission</label>
+        <select id="cfgTrans" onchange="onConfigChange()">
+          <option value="4l60e">4L60E / 4L65E / 4L70E (4-Spd)</option>
+          <option value="4l80e">4L80E / 4L85E (Shows Repin Pins!)</option>
+          <option value="6l80e">6L80E / 6L90E (6-Spd CAN)</option>
+          <option value="manual">Manual / Non-Electronic (TH350/400/TKX/T56)</option>
+        </select>
+      </div>
+      <div class="cfg-field">
+        <label>Throttle Type</label>
+        <select id="cfgThrottle" onchange="onConfigChange()">
+          <option value="auto">Match Factory ECM Default</option>
+          <option value="dbc">Cable Throttle (DBC — IAC + TPS)</option>
+          <option value="dbw">Electronic Pedal (DBW)</option>
+        </select>
+      </div>
+      <div class="cfg-field">
+        <label>Cooling Fans</label>
+        <select id="cfgFans" onchange="onConfigChange()">
+          <option value="pcm">PCM Electric Fans</option>
+          <option value="mech">Mechanical / Standalone Controller</option>
+        </select>
+      </div>
+      <div class="cfg-field">
+        <label>Air Conditioning</label>
+        <select id="cfgAC" onchange="onConfigChange()">
+          <option value="delete">No A/C or Standalone Vintage Air</option>
+          <option value="keep">Keep OEM PCM A/C Control</option>
+        </select>
+      </div>
+      <div class="cfg-field">
+        <label>Emissions</label>
+        <select id="cfgEmissions" onchange="onConfigChange()">
+          <option value="offroad">Standalone Swap (Delete Rear O2 / EVAP)</option>
+          <option value="emissions">50-State Emissions (Keep Rear O2 / EVAP)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="explorer-grid">
+      <!-- Left Controller Picker -->
+      <aside class="ecm-sidebar">
+        <div class="sidebar-heading">Controller Family (12)</div>
+        <div id="ecmListContainer"></div>
+      </aside>
+
+      <!-- Main Pinout Workspace -->
+      <div style="min-width:0;">
+        <div id="ecmBanner" class="ecm-summary-bar"></div>
+        <div id="connectorTabs" class="connector-tabs"></div>
+
+        <!-- True OEM Physical Connector SVG Panel -->
+        <div class="connector-panel">
+          <div class="connector-panel-top">
+            <div>
+              <div id="visualConnTitle" class="connector-heading-title">Connector Face</div>
+              <div id="visualConnSub" class="connector-heading-sub">OEM Factory Connector End View</div>
+            </div>
+            <div class="connector-controls-right">
+              <div id="bankZoomBar" class="bank-bar" style="display:none;">
+                <button class="bank-btn active" id="dbank-full" onclick="setDesktopBank('full')">Full Plug</button>
+                <button class="bank-btn" id="dbank-left" onclick="setDesktopBank('left')">Left Bank (1–20 / 41–60)</button>
+                <button class="bank-btn" id="dbank-right" onclick="setDesktopBank('right')">Right Bank (21–40 / 61–80)</button>
+              </div>
+              <button class="btn" id="toggleDiagramBtn" onclick="toggleDesktopDiagram()" style="padding:5px 10px;font-size:12px;">Hide Diagram</button>
+            </div>
+          </div>
+
+          <div id="diagramCollapsible">
+            <div id="connectorVisualCasing" class="svg-stage"></div>
+
+            <div class="filter-chip-row">
+              <div class="chip-group" id="statusLegend"></div>
+              <span style="font-size:11.5px;color:var(--muted);">Click any pin cavity to inspect &bull; Click filter pills to highlight</span>
+            </div>
+          </div>
+
+          <div id="pinInspectorBox" class="pin-inspector">
+            <span style="color:var(--muted);font-size:12.5px;">👆 Click any cavity on the factory connector diagram above (or any row below) to inspect wire color, circuit #, and hookup instructions.</span>
+          </div>
+        </div>
+
+        <!-- Search & Filter Bar -->
+        <div class="table-toolbar">
+          <input type="text" id="pinSearchInput" class="search-input" placeholder="🔍 Search Pin # (e.g. 42), Wire Color (PNK, DK GRN), Circuit # (439, 335), or Function (Tach, VSS, Fan, Fuel Pump)..." oninput="renderPinTable()">
+          <select id="systemFilter" class="toolbar-select" onchange="renderPinTable()">
+            <option value="ALL">All Systems</option>
+            <option value="Power & Grounds">Power &amp; Grounds</option>
+            <option value="Fuel Injectors & Pump">Fuel Injectors &amp; Pump</option>
+            <option value="Ignition, Crank, Cam & Knock">Ignition, Crank, Cam &amp; Knock</option>
+            <option value="Air, Throttle & Pedal">Air, Throttle &amp; Pedal</option>
+            <option value="Cooling & A/C">Cooling &amp; A/C</option>
+            <option value="Oxygen Sensors (O2)">Oxygen Sensors (O2)</option>
+            <option value="Transmission, VSS & Brake">Transmission, VSS &amp; Brake</option>
+            <option value="Gauges, Serial Data & Oil">Gauges, Serial Data &amp; Oil</option>
+            <option value="Emissions, Body & Aux">Emissions, Body &amp; Aux</option>
+          </select>
+          <label class="toggle-check">
+            <input type="checkbox" id="hideEmptyChk" checked onchange="renderPinTable()">
+            Hide Empty Cavities (<span id="shownRowCount">0</span> shown)
+          </label>
+        </div>
+
+        <!-- Clean Scannable Circuit Table -->
+        <div class="table-wrap">
+          <table class="pin-table">
+            <thead>
+              <tr>
+                <th style="width:46px;">Done</th>
+                <th style="width:68px;">Pin</th>
+                <th style="width:145px;">Wire Color</th>
+                <th style="width:82px;">Circuit</th>
+                <th style="width:270px;">Function</th>
+                <th style="width:165px;">Action</th>
+                <th>What To Do &amp; Builder Notes</th>
+              </tr>
+            </thead>
+            <tbody id="pinTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- TAB 2: STANDALONE FUSE BLOCK, RELAYS & OBD2 PORT BUILDER              -->
+  <!-- ===================================================================== -->
+  <section id="tab-fuseblock" class="tab-view">
+    <div class="section-intro">
+      <h2>⚡ Standalone Fuse Block, Relays &amp; OBD2 Port Wiring</h2>
+      <p>Clean schematics and pinouts for powering Gen III (97–07), Gen IV (05–15 E38/E40/E67), and Gen V (14+ E92) standalone swaps.</p>
+    </div>
+
+    <div class="guide-grid">
+      <div class="guide-card">
+        <h3>🔋 1. Gen III Standalone 4-Fuse &amp; 2-Relay Box (LT1Swap Standard)</h3>
+        <p style="font-size:13px;color:var(--muted);margin:0 0 8px;">Works for 99–07 Vortec 4.8/5.3/6.0, 97–02 LS1, 04 GTO, and 94–97 LT1. One Main Ignition Relay feeds 3 switched fuses, plus 1 Constant B+ fuse and 1 Fuel Pump Relay.</p>
+        <div class="schematic-box">[BATTERY 12V+ CONSTANT] ──┬──► [FUSE 1: 10A/15A CONSTANT B+] ──► PCM C1-20 &amp; C1-57 (ORN) + OBD2 Pin 16
+                          │
+                          ├──► [IGNITION RELAY Pin 30]
+                          │      ├─ Pin 86: Vehicle Key Switch 12V+ (HOT IN RUN &amp; CRANK!)
+                          │      ├─ Pin 85: Chassis Ground
+                          │      └─ Pin 87 (Switched 12V+ Output to 3 Bussed Fuses):
+                          │           ├──► [FUSE 2: 15A INJ/COIL BANK 1] ──► Pink: Coils 1,3,5,7 &amp; Inj 1,3,5,7
+                          │           ├──► [FUSE 3: 15A INJ/COIL BANK 2] ──► Pink: Coils 2,4,6,8 &amp; Inj 2,4,6,8
+                          │           └──► [FUSE 4: 15A PCM/MAF/O2/TRANS] ─► PCM C1-19 &amp; C1-75 (PNK), MAF Pin D,
+                          │                                                  Front O2 Heaters (Pin D), Trans Pin E
+                          │
+                          └──► [FUEL PUMP RELAY Pin 30 (via 20A Fuse)]
+                                 ├─ Pin 85: PCM Fuel Pump Trigger (C2 Pin 9 DK GRN/WHT = 12V+ Output!)
+                                 ├─ Pin 86: Chassis Ground
+                                 └─ Pin 87: Gray 14-AWG Wire to Electric Fuel Pump (+)</div>
+        <div class="alert-box alert-danger">
+          <strong>⚠️ #1 First-Start Mistake:</strong> Your key switch wire feeding Relay Pin 86 MUST stay 12V+ hot during BOTH <strong>RUN</strong> and <strong>CRANK (START)</strong>! Always verify with a meter while cranking.
+        </div>
+      </div>
+
+      <div class="guide-card">
+        <h3>🔍 2. OBD2 Diagnostic Port (DLC 16-Pin) Standalone Hookup</h3>
+        <p style="font-size:13px;color:var(--muted);margin:0 0 8px;">Required for HP Tuners / EFILive flashing, live data logging, and DTC checks. Only 4 wires for Gen III (5 wires for Gen IV/V CAN):</p>
+        <table class="mini-table">
+          <thead>
+            <tr><th>OBD2 Pin</th><th>Wire</th><th>Function</th><th>Connects To</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Pin 2</strong></td><td>PPL or DK GRN</td><td>J1850 VPW Serial Data</td><td><strong>Gen III (97–07):</strong> PCM C1 Blue Pin 58 (or C2-58 on 97–98 LS1)</td></tr>
+            <tr><td><strong>Pin 4</strong></td><td>BLK</td><td>Chassis Ground</td><td>Engine block / chassis ground</td></tr>
+            <tr><td><strong>Pin 5</strong></td><td>BLK/WHT</td><td>Signal Ground</td><td>Engine block / chassis ground</td></tr>
+            <tr><td><strong>Pin 6</strong></td><td>TN/BK or D-BU</td><td>HS-GMLAN CAN (+)</td><td><strong>Gen IV / V:</strong> ECM/TCM CAN+ (Add 120Ω resistor across Pins 6 &amp; 14!)</td></tr>
+            <tr><td><strong>Pin 14</strong></td><td>TN or WH</td><td>HS-GMLAN CAN (-)</td><td><strong>Gen IV / V:</strong> ECM/TCM CAN-</td></tr>
+            <tr><td><strong>Pin 16</strong></td><td>ORN or RD/WH</td><td>Battery 12V+ Constant</td><td>10A/15A Constant B+ Fuse (powers scanner / tuning interface)</td></tr>
+          </tbody>
+        </table>
+        <div class="alert-box alert-info">
+          <strong>💡 Gen IV / Gen V CAN Bus Resistor:</strong> Standalone Gen IV/V harnesses lose the rear body BCM resistor. Solder a <strong>120-Ohm 1/4W resistor</strong> across OBD2 Pins 6 &amp; 14.
+        </div>
+      </div>
+
+      <div class="guide-card">
+        <h3>🌀 3. PCM-Controlled Dual Electric Cooling Fans</h3>
+        <p style="font-size:13px;color:var(--muted);margin:0 0 8px;">GM ECMs trigger fan relays by supplying <strong>GROUND</strong>. On 99–06 trucks with factory clutch fans, push PCM terminals into C1-42 &amp; C2-33 and enable fans in the tune:</p>
+        <table class="mini-table">
+          <thead>
+            <tr><th>Controller Family</th><th>Fan 1 / Low Trigger (Ground)</th><th>Fan 2 / High Trigger (Ground)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>99–07 Gen III (P01 / P59)</strong></td><td>C1 Blue <strong>Pin 42</strong> (DK GRN, 335)</td><td>C2 Red/Green <strong>Pin 33</strong> (DK BLU, 473)</td></tr>
+            <tr><td><strong>97–98 Gen III LS1</strong></td><td>C1 Red <strong>Pin 46</strong> (DK GRN, 335)</td><td>C2 Blue <strong>Pin 68</strong> (DK BLU, 473)</td></tr>
+            <tr><td><strong>07–15 Gen IV E38</strong></td><td>X1 Black <strong>Pin 58</strong> (D-GN, 335)</td><td>X1 Black <strong>Pin 17</strong> (D-BU, 473)</td></tr>
+            <tr><td><strong>05–06 Gen IV E40</strong></td><td>C1 Blue <strong>Pin 36</strong> (D-GN, 335)</td><td>C1 Blue <strong>Pin 56</strong> (L-BU, 473)</td></tr>
+            <tr><td><strong>07–15 Gen IV E67</strong></td><td>C3 Gray <strong>Pin 49</strong> (D-GN, 335)</td><td>C1 Blue <strong>Pin 54</strong> (L-BU, 473)</td></tr>
+            <tr><td><strong>14–18 Gen V E92</strong></td><td colspan="2">X1 <strong>Pin 59</strong> (BN/YE, 473 — Factory PWM; configure for discrete relay in tune)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="guide-card">
+        <h3>⚡ 4. Gen IV (E38) &amp; Gen V (E92) Powertrain Relay Architecture</h3>
+        <p style="font-size:13px;color:var(--muted);margin:0 0 8px;">Key-On 12V+ wakes the ECM, and the ECM grounds the <strong>Powertrain Relay</strong> coil to power injectors, coils, MAF, and O2 heaters:</p>
+        <table class="mini-table">
+          <thead>
+            <tr><th>Circuit Group</th><th>2008 E38 Truck</th><th>2010 Camaro E38</th><th>2015 Gen V L83 E92</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>1. Constant B+ (15A)</strong></td><td>X1 Pin 20 (RD/WH)</td><td>X1 Pin 20 — X102 Pin 1</td><td>X1 Pin 52 + 6L80 Pin 4</td></tr>
+            <tr><td><strong>2. Key-On Run/Crank (15A)</strong></td><td>X1 Pin 19 (PK)</td><td>X1 Pin 19 — X3 Pin 14</td><td>X1 Pin 51 + X1-70 + 6L80 Pin 9/12</td></tr>
+            <tr><td><strong>3. Powertrain Relay Trigger</strong></td><td>X1 Pin 59 (YE, 5991)</td><td>X1 Pin 59 — X3 Pin 6</td><td>X1 Pin 72 (YE, 5991)</td></tr>
+            <tr><td><strong>4. Powertrain Relay Feeds</strong></td><td>X1 Pin 47 + Coils/Inj/MAF/O2</td><td>X1 Pin 47 + X3 Pins 1,2,9,16,19</td><td>X1 Pins 62, 67, 73 + Coils/MAF/O2</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- TAB 3: REPIN & CONVERSION WIZARDS                                     -->
+  <!-- ===================================================================== -->
+  <section id="tab-wizards" class="tab-view">
+    <div class="section-intro">
+      <h2>🔄 Harness Repin &amp; Conversion Wizards</h2>
+      <p>Step-by-step factory pin moves for 4L60E-to-4L80E swaps, P59 Drive-By-Cable service number verification, and 97–98 LS1 to 0411 PCM upgrades.</p>
+    </div>
+
+    <div class="guide-grid">
+      <div class="guide-card">
+        <h3>⚙️ Wizard 1: 4L60E to 4L80E Harness Conversion (Zero Cutting)</h3>
+        <p style="font-size:13px;color:var(--muted);margin:0 0 8px;">Repurpose the unused 3-2 Downshift (White) and TCC On/Off (Tan/Black) wires for the 2-pin 4L80E front Input Speed Sensor (ISS), and move Brown TCC PWM into Pin S:</p>
+        <table class="mini-table">
+          <thead>
+            <tr><th>Step</th><th>At 20-Pin Round Trans Plug</th><th>At 99–07 Gen III PCM</th><th>At 96–00 L31 VCM</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>1. White Wire</strong></td>
+              <td>Pull White out of <strong>Pin S</strong></td>
+              <td>Move <strong>C1-79</strong> ➔ <strong>C2-22</strong> (ISS High)</td>
+              <td>Move <strong>C1-13</strong> ➔ <strong>C3-7</strong></td>
+            </tr>
+            <tr>
+              <td><strong>2. Tan/Blk Wire</strong></td>
+              <td>Pull Tan/Blk out of <strong>Pin T</strong></td>
+              <td>Move <strong>C2-42</strong> ➔ <strong>C2-23</strong> (ISS Low)</td>
+              <td>Move <strong>C1-10</strong> ➔ <strong>C3-8</strong></td>
+            </tr>
+            <tr>
+              <td><strong>3. Brown Wire</strong></td>
+              <td>Move Brown from <strong>Pin U</strong> ➔ <strong>Pin S</strong>! Seal T &amp; U.</td>
+              <td>Keep at <strong>C2-2</strong> (TCC PWM)</td>
+              <td>Keep in place</td>
+            </tr>
+            <tr>
+              <td><strong>4. ISS Plug</strong></td>
+              <td colspan="3">Install a 2-pin 4L80E ISS pigtail onto the pulled White &amp; Tan/Black wires (polarity doesn't matter) and flash a 4L80E segment into the PCM.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="guide-card">
+        <h3>🦶 Wizard 2: 2003–2007 P59 Cable Throttle (DBC) Service # Checker</h3>
+        <p style="font-size:13px;color:var(--muted);margin:0 0 8px;">Most 03–07 P59 Blue/Green PCMs omit the <strong>B67U1 IAC stepper chip</strong> and cannot drive a cable throttle body. Check your 8-digit Service Number:</p>
+        <input type="text" id="servNumInput" class="search-input" style="width:100%;margin-bottom:8px;" placeholder="Enter 8-digit PCM Service No. (e.g. 12576106, 12586242, 12200411)..." oninput="checkDbcServiceNum()">
+        <div id="dbcCheckResult" class="alert-box alert-info" style="margin-bottom:8px;">Type a PCM Service Number above to verify DBC IAC Stepper &amp; 12V A/C Request support.</div>
+        <table class="mini-table">
+          <thead>
+            <tr><th>Year</th><th>Service No.</th><th>Hardware</th><th>Cable Throttle (DBC)?</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>99–02</td><td><strong>09354896 / 12200411</strong></td><td>Blue/Red P01</td><td>✅ YES (All support DBC &amp; DBW)</td></tr>
+            <tr><td>2003</td><td><strong>12576106 / 12581565</strong></td><td>12570558</td><td>✅ YES (Has B67U1 IAC chip)</td></tr>
+            <tr><td>2003</td><td>12582605</td><td>12580786</td><td>❌ NO (DBW Only)</td></tr>
+            <tr><td>2004</td><td><strong>12586243</strong> (GTO / Van)</td><td>12583659</td><td>✅ YES (Has B67U1 IAC chip)</td></tr>
+            <tr><td>2004</td><td>12586242 (Truck / SUV)</td><td>12583660</td><td>❌ NO (DBW Only)</td></tr>
+            <tr><td>05–06</td><td><strong>12589462</strong> (Express Van)</td><td>12589161</td><td>✅ YES (Has B67U1 IAC chip)</td></tr>
+            <tr><td>05–06</td><td>12589463 (Truck / SUV)</td><td>12589162</td><td>❌ NO (DBW Only)</td></tr>
+            <tr><td>2007</td><td><strong>12602801</strong> (Express Van)</td><td>12589161</td><td>✅ YES (Has B67U1 IAC chip)</td></tr>
+            <tr><td>2007</td><td>12602802 (Truck / SUV)</td><td>12589162</td><td>❌ NO (DBW Only)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="guide-card" style="grid-column: 1 / -1;">
+        <h3>🔀 Wizard 3: 1997–1998 LS1 (Red/Blue) to 1999–2002 "0411" PCM (Blue/Red) Repin Chart</h3>
+        <p style="font-size:13px;color:var(--muted);margin:0 0 8px;">On 97–98 LS1, C1 is RED and C2 is BLUE; on 99–02 0411, C1 is BLUE and C2 is RED. Move pins as follows:</p>
+        <div style="max-height:340px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;">
+          <table class="mini-table" style="margin:0;">
+            <thead>
+              <tr><th>Circuit Function</th><th>Wire Color</th><th>1997–1998 PCM Pin</th><th>➔ Move To 1999–2002 (0411) Pin</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>PCM Ground</td><td>BLK/WHT (451)</td><td>RED 79, RED 80, BLUE 20, BLUE 60</td><td><strong>BLUE 1, BLUE 40, RED 1, RED 40</strong></td></tr>
+              <tr><td>Battery Positive 12V+ Constant</td><td>ORN (440)</td><td>BLUE 57, BLUE 73</td><td><strong>BLUE 20, BLUE 57</strong></td></tr>
+              <tr><td>Ignition 1 Switched 12V+</td><td>PNK (439)</td><td>BLUE 19</td><td><strong>BLUE 19</strong></td></tr>
+              <tr><td>Fuel Pump Relay Control (12V+)</td><td>DK GRN/WHT (465)</td><td>RED 19</td><td><strong>RED 9</strong></td></tr>
+              <tr><td>Engine Speed (Tachometer) Output</td><td>WHT (121)</td><td>BLUE 35</td><td><strong>RED 10</strong></td></tr>
+              <tr><td>Check Engine Light (MIL) Control</td><td>BRN/WHT (419)</td><td>BLUE 3</td><td><strong>RED 46</strong></td></tr>
+              <tr><td>Class 2 Serial Data (OBD2 Pin 2)</td><td>PPL (1807)</td><td>BLUE 58</td><td><strong>BLUE 58</strong></td></tr>
+              <tr><td>Fuel Injectors 1, 2, 3, 4</td><td>BLK, LT GRN/BLK, PNK/BLK, LT BLU/BLK</td><td>RED 36, BLUE 38, RED 9, RED 12</td><td><strong>BLUE 36 (1), BLUE 4 (2), BLUE 3 (3), BLUE 44 (4)</strong></td></tr>
+              <tr><td>Fuel Injectors 5, 6, 7, 8</td><td>BLK/WHT, YEL/BLK, RED/BLK, DK BLU/WHT</td><td>RED 15, RED 18, BLUE 1, BLUE 39</td><td><strong>BLUE 43 (5), BLUE 42 (6), BLUE 77 (7), BLUE 76 (8)</strong></td></tr>
+              <tr><td>Ignition Coils 1, 2, 3, 4</td><td>PPL, RED/WHT, LT BLU, DK GRN/WHT</td><td>RED 39, RED 13, RED 37, RED 60</td><td><strong>RED 66 (1), RED 26 (2), RED 67 (3), RED 27 (4)</strong></td></tr>
+              <tr><td>Ignition Coils 5, 6, 7, 8</td><td>DK GRN, LT BLU/WHT, RED, PPL/WHT</td><td>RED 59, RED 10, RED 38, RED 78</td><td><strong>RED 68 (5), RED 28 (6), RED 69 (7), RED 29 (8)</strong></td></tr>
+              <tr><td>Ignition Coil Low Ref Bank 1 &amp; 2</td><td>BRN (2129), BRN/WHT (2130)</td><td>RED 40, RED 76</td><td><strong>RED 60 (Bank 1), RED 25 (Bank 2)</strong></td></tr>
+              <tr><td>Crankshaft Position (12V, Sig, Low)</td><td>LT GRN, DK BLU/WHT, YEL/BLK</td><td>BLUE 29, RED 32, RED 57</td><td><strong>BLUE 2 (12V), BLUE 12 (Sig), BLUE 21 (Low)</strong></td></tr>
+              <tr><td>Camshaft Position (12V, Sig, Low)</td><td>RED, BRN/WHT, PNK/BLK</td><td>BLUE 29, RED 4, RED 52</td><td><strong>BLUE 39 (12V), BLUE 73 (Sig), BLUE 61 (Low)</strong></td></tr>
+              <tr><td>Knock Sensor 1 &amp; 2</td><td>DK BLU (496), LT BLU (1876)</td><td>BLUE 49, BLUE 11</td><td><strong>BLUE 51 (KS1), BLUE 11 (KS2)</strong></td></tr>
+              <tr><td>ECT Coolant Temp Sig &amp; Low</td><td>YEL (410), TAN (470)</td><td>BLUE 68, BLUE 24</td><td><strong>BLUE 74 (Sig), BLUE 80 (Low)</strong></td></tr>
+              <tr><td>MAP Sensor 5V, Sig, Low</td><td>GRY, LT GRN, ORN/BLK</td><td>BLUE 72, BLUE 52, RED 51</td><td><strong>RED 48 (5V), RED 32 (Sig), BLUE 54 (Low)</strong></td></tr>
+              <tr><td>TPS 5V, Sig, Low</td><td>GRY, DK BLU, BLK</td><td>BLUE 65, BLUE 45, BLUE 24</td><td><strong>BLUE 8 (5V), BLUE 24 (Sig), BLUE 53 (Low)</strong></td></tr>
+              <tr><td>IAC Coils A Hi/Lo &amp; B Hi/Lo</td><td>LT GRN/WHT, LT GRN/BLK, LT BLU/WHT, LT BLU/BLK</td><td>RED 49, RED 29, RED 27, RED 28</td><td><strong>BLUE 76, BLUE 77, BLUE 78, BLUE 79</strong></td></tr>
+              <tr><td>MAF Signal &amp; IAT Signal</td><td>YEL (492), TAN (472)</td><td>BLUE 15, BLUE 69</td><td><strong>RED 31 (MAF), BLUE 25 (IAT)</strong></td></tr>
+              <tr><td>Cooling Fan #1 &amp; Fan #2</td><td>DK GRN (335), DK BLU (473)</td><td>RED 46, BLUE 68</td><td><strong>BLUE 42 (Fan 1), RED 33 (Fan 2)</strong></td></tr>
+              <tr><td>VSS High, Low, &amp; Speedo Out</td><td>PPL/WHT, LT GRN/BLK, DK GRN/WHT</td><td>RED 7, RED 5, BLUE 5</td><td><strong>RED 21 (Hi), RED 20 (Lo), RED 50 (Out)</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- TAB 4: SENSORS, INJECTORS, O2 & APP PEDAL VAULT                       -->
+  <!-- ===================================================================== -->
+  <section id="tab-sensors" class="tab-view">
+    <div class="section-intro">
+      <h2>🧭 Sensor, Injector, O2 &amp; DBW Pedal Reference Vault</h2>
+      <p>Quick lookup tables for 24x vs 58x crank triggers, DBW pedal pinouts, Case vs Isolated O2 sensors, and GM injector flow rates.</p>
+    </div>
+
+    <div class="guide-grid">
+      <div class="guide-card">
+        <h3>🧲 1. 24x (Gen III) vs 58x (Gen IV / V) Engine Quick ID</h3>
+        <table class="mini-table">
+          <thead>
+            <tr><th>Feature</th><th>Gen III (97–07 Classic)</th><th>Gen IV (06–15) &amp; Gen V (14+)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Crank Reluctor</strong></td><td><strong>24x</strong> (2-piece stamped wheel)</td><td><strong>58x</strong> (1-piece wheel) <em>*05–06 E40 is 24x</em></td></tr>
+            <tr><td><strong>CKP Sensor Plug</strong></td><td><strong>BLACK</strong> housing (12V Ref)</td><td><strong>GRAY</strong> housing (5V Ref)</td></tr>
+            <tr><td><strong>Cam Sensor</strong></td><td><strong>1x</strong> Rear top of block</td><td><strong>4x</strong> Front timing cover</td></tr>
+            <tr><td><strong>Knock Sensors</strong></td><td><strong>1-Wire</strong> in Lifter Valley</td><td><strong>2-Wire</strong> on Outside Block Skirts</td></tr>
+            <tr><td><strong>Controllers</strong></td><td>P01 (0411), P59, E40</td><td>E38, E67, E92</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="guide-card">
+        <h3>🦶 2. DBW Gas Pedal (APP) Pinout (Truck vs Camaro D/F Swap!)</h3>
+        <p style="font-size:12.5px;color:var(--muted);margin:0 0 6px;">07–13 Vortec Truck pedals and 10–15 Camaro pedals <strong>swap Pins D and F</strong>:</p>
+        <table class="mini-table">
+          <thead>
+            <tr><th>Pedal Pin</th><th>07–13 E38 Truck</th><th>10–15 E38 Camaro</th><th>14–18 Gen V E92</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Pin A</strong></td><td>Low Ref 2 ➔ X1-23 (PU)</td><td>Low Ref 2 ➔ X1-23 (PU)</td><td>Low Ref 2 ➔ X1-53</td></tr>
+            <tr><td><strong>Pin B</strong></td><td>Signal 2 ➔ X1-32 (L-BU)</td><td>Signal 2 ➔ X1-32 (L-BU)</td><td>Signal 2 ➔ X1-34</td></tr>
+            <tr><td><strong>Pin C</strong></td><td>5V Ref 2 ➔ X1-36 (TN)</td><td>5V Ref 1 ➔ X1-36 (TN)</td><td>5V Ref 2 ➔ X1-33</td></tr>
+            <tr><td><strong>Pin D</strong></td><td>⚠️ <strong>5V Ref 1 ➔ X1-56</strong></td><td>⚠️ <strong>Low Ref 1 ➔ X1-30</strong></td><td>5V Ref 1 ➔ X1-14</td></tr>
+            <tr><td><strong>Pin E</strong></td><td>Signal 1 ➔ X1-29 (D-BU)</td><td>Signal 1 ➔ X1-29 (D-BU)</td><td>Signal 1 ➔ X1-15</td></tr>
+            <tr><td><strong>Pin F</strong></td><td>⚠️ <strong>Low Ref 1 ➔ X1-30</strong></td><td>⚠️ <strong>5V Ref 2 ➔ X1-56</strong></td><td>Low Ref 1 ➔ X1-30</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="guide-card">
+        <h3>🌡️ 3. O2 Sensor Case-Grounded vs Isolated-Ground Decoder</h3>
+        <table class="mini-table">
+          <thead>
+            <tr><th>O2 Type</th><th>Connector</th><th>TAN (Low Ref) Wiring Rule</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Case-Grounded</strong><br>(99–02 4.8/5.3)</td><td>Flat 4-Pin Black</td><td>Grounds via exhaust threads; TAN runs straight to PCM C1-25/26.</td></tr>
+            <tr><td><strong>Isolated-Ground</strong><br>(01–02 6.0 / Canada)</td><td>Square 4-Pin White</td><td>TAN wires MUST be grounded to PCM C1-63 or engine block!</td></tr>
+            <tr><td><strong>03–07 P59 O2s</strong></td><td>Square 4-Pin</td><td>PCM PWM heater control on C2 Green Pins 72 &amp; 74.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="guide-card">
+        <h3>⛽ 4. GM Injector Flow Rates @ 58 PSI</h3>
+        <table class="mini-table">
+          <thead>
+            <tr><th>GM Part #</th><th>Original Engine</th><th>Flow @ 58 PSI</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>25317669 / 25320287</strong></td><td>1999 Vortec 4.8 / 5.3</td><td><strong>21.8 lb/hr</strong> (2.742 g/s)</td></tr>
+            <tr><td><strong>25317670 / 25323974</strong></td><td>1999–2000 6.0 &amp; 2000 4.8/5.3</td><td><strong>24.8 lb/hr</strong> (3.125 g/s)</td></tr>
+            <tr><td><strong>25317628</strong></td><td>2001–2007 Vortec 4.8 / 5.3 / 6.0</td><td><strong>25.2 lb/hr</strong> (3.180 g/s)</td></tr>
+            <tr><td><strong>25326903</strong></td><td>2002–2006 L59 Flex Fuel</td><td><strong>33.0 lb/hr</strong> @ 50 PSI</td></tr>
+            <tr><td><strong>12554271 / 12561462</strong></td><td>97–98 &amp; 01–04 LS1 / LS6</td><td><strong>29.6 – 30.0 lb/hr</strong></td></tr>
+            <tr><td><strong>12555894</strong></td><td>1999–2000 LS1</td><td><strong>27.3 lb/hr</strong> (3.438 g/s)</td></tr>
+            <tr><td><strong>12594512 / 12613412</strong></td><td>2007–2013 Gen IV 5.3 / 6.0 / 6.2</td><td><strong>36.0 – 42.0 lb/hr</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- TAB 5: FIRST-START NO-START TROUBLESHOOTER                            -->
+  <!-- ===================================================================== -->
+  <section id="tab-troubleshoot" class="tab-view">
+    <div class="section-intro">
+      <h2>🛠️ First-Start No-Start &amp; Swap Troubleshooter</h2>
+      <p>Fast, proven fixes for the 6 most common LS &amp; LT standalone wiring issues.</p>
+    </div>
+
+    <div class="guide-grid">
+      <div class="guide-card">
+        <h3>🚨 1. Fires for 2 Seconds and Immediately Dies</h3>
+        <div class="alert-box alert-danger"><strong>99% Cause:</strong> VATS anti-theft is still enabled in the tune, or fuel pump loses power after prime.</div>
+        <ul style="font-size:13px;padding-left:18px;color:var(--text-2);">
+          <li>Confirm <strong>VATS is disabled</strong> in HP Tuners / EFILive (VATS cuts injector pulse ~2s after start).</li>
+          <li><strong>Unplug MAF test:</strong> If it idles with MAF unplugged, your MAF calibration is mismatched or there is a post-MAF intake leak.</li>
+          <li>Verify steady <strong>58 PSI</strong> rail pressure after the 2-second prime.</li>
+        </ul>
+      </div>
+
+      <div class="guide-card">
+        <h3>🚨 2. Cranks Strong, Zero Spark &amp; Zero Pop</h3>
+        <div class="alert-box alert-danger"><strong>Cause:</strong> Switched 12V+ Pink wire drops to 0V while cranking!</div>
+        <ul style="font-size:13px;padding-left:18px;color:var(--text-2);">
+          <li>Meter PCM Pink (C1-19 / X1-19 / X1-51) and Coil Pin D <strong>while cranking</strong>. Must stay &gt;10V.</li>
+          <li>Move Ignition Relay trigger off an Accessory/Run-only lug to a true <strong>IGN 1 (Hot in RUN &amp; START)</strong> lug.</li>
+          <li>Verify all cylinder head / block ground lugs (especially rear of driver head) are bolted to bare metal.</li>
+        </ul>
+      </div>
+
+      <div class="guide-card">
+        <h3>🚨 3. Tachometer Dead or Reads Half RPM</h3>
+        <ul style="font-size:13px;padding-left:18px;color:var(--text-2);">
+          <li><strong>Dead Tach Fix:</strong> Solder a <strong>1kΩ 1/4W pull-up resistor</strong> between the White tach wire (C2-10 / X1-48) and Key-On 12V+.</li>
+          <li><strong>Half RPM Fix:</strong> Factory GM LS tach output is a 4-cylinder pulse (2 pulses/rev). Set gauge to <strong>4-Cyl mode</strong> or change pulses in tune.</li>
+        </ul>
+      </div>
+
+      <div class="guide-card">
+        <h3>🚨 4. 4L60E / 4L80E Stuck in 3rd Gear or No Lockup</h3>
+        <ul style="font-size:13px;padding-left:18px;color:var(--text-2);">
+          <li><strong>Stuck in 3rd Gear:</strong> Feed Pink <strong>Pin E</strong> on the 20-pin round trans plug with a 15A Key-On 12V+ fuse!</li>
+          <li><strong>No Converter Lockup:</strong> Gen III C1 Blue <strong>Pin 33 (Purple)</strong> MUST have 12V+ when OFF the brakes and 0V when pressing the brakes.</li>
+        </ul>
+      </div>
+
+      <div class="guide-card">
+        <h3>🚨 5. DBW Throttle Dead / Reduced Engine Power</h3>
+        <ul style="font-size:13px;padding-left:18px;color:var(--text-2);">
+          <li><strong>03–07 P59:</strong> PCM OS year, TAC Module, and Pedal MUST be a matched set (2003 metal-tab TAC will NOT talk to 06–07 OS).</li>
+          <li><strong>E38 Gen IV:</strong> Truck and Camaro pedals swap Pins D and F (check Tab 4 Pedal Matrix).</li>
+        </ul>
+      </div>
+
+      <div class="guide-card">
+        <h3>🚨 6. Alternator Not Charging</h3>
+        <ul style="font-size:13px;padding-left:18px;color:var(--text-2);">
+          <li><strong>99–02 4-Pin Alternator:</strong> Wire Pin B (L-terminal) to PCM C2 Red Pin 15, OR through a <strong>470Ω 1/2W resistor</strong> to Key-On 12V+.</li>
+          <li><strong>03–07 2-Pin Alternator:</strong> Controlled by PCM (C1-15 &amp; C2-75). Never connect straight 12V+ without a resistor!</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <!-- TAB 6: CROSS-ECM PINOUT COMPARE                                       -->
+  <!-- ===================================================================== -->
+  <section id="tab-compare" class="tab-view">
+    <div class="section-intro">
+      <h2>⚖️ Cross-ECM Essential Swap Circuits Matrix</h2>
+      <p>Side-by-side comparison of the 10 core standalone hookup circuits across all major GM LS &amp; LT controllers.</p>
+    </div>
+
+    <div class="table-wrap">
+      <table class="pin-table">
+        <thead>
+          <tr>
+            <th>Essential Circuit</th>
+            <th>99–02 P01 (0411)</th>
+            <th>03–07 P59 (Blu/Grn)</th>
+            <th>97–98 LS1 (Red/Blu)</th>
+            <th>07–15 E38 (X1/X2)</th>
+            <th>05–06 E40 (C1–C3)</th>
+            <th>07–15 E67 (C1–C3)</th>
+            <th>14–18 E92 (X1–X3)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Constant 12V+ B+</strong></td>
+            <td>C1 Blu <strong>20, 57</strong></td>
+            <td>C1 Blu <strong>20, 57</strong></td>
+            <td>C2 Blu <strong>57, 73</strong></td>
+            <td>X1 Blk <strong>20</strong></td>
+            <td>C1 Blu <strong>20</strong></td>
+            <td>C1 Blu <strong>20</strong></td>
+            <td>X1 <strong>52</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Key-On 12V+ Ign</strong></td>
+            <td>C1 Blu <strong>19, 75</strong></td>
+            <td>C1 Blu <strong>19, 75</strong></td>
+            <td>C2 Blu <strong>19</strong></td>
+            <td>X1 Blk <strong>19, 47</strong></td>
+            <td>C1 Blu <strong>14, 19</strong></td>
+            <td>C1-<strong>19</strong> &amp; C2-<strong>13</strong></td>
+            <td>X1 <strong>51, 70, 62, 67, 73</strong></td>
+          </tr>
+          <tr>
+            <td><strong>ECM Grounds</strong></td>
+            <td>C1 <strong>1,40</strong> &amp; C2 <strong>1,40</strong></td>
+            <td>C1 <strong>1,40</strong> &amp; C2 <strong>1,40</strong></td>
+            <td>C1 <strong>79,80</strong> &amp; C2 <strong>20,60</strong></td>
+            <td>X2 <strong>73</strong> + Case</td>
+            <td>C2 <strong>1,73</strong> &amp; C3 <strong>1,56</strong></td>
+            <td>C2 Blk <strong>2, 4, 5, 7</strong></td>
+            <td>X2 <strong>73</strong> &amp; X3 <strong>73</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Fuel Pump Relay</strong></td>
+            <td>C2 Red <strong>Pin 9</strong></td>
+            <td>C2 Grn <strong>Pin 9</strong></td>
+            <td>C1 Red <strong>Pin 19</strong></td>
+            <td>X1 Blk <strong>Pin 50</strong></td>
+            <td>C1 Blu <strong>Pin 45</strong></td>
+            <td>C1 Blu <strong>Pin 4</strong></td>
+            <td>X1 <strong>Pin 44</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Check Engine (MIL)</strong></td>
+            <td>C2 Red <strong>Pin 46</strong></td>
+            <td>C2 Grn <strong>Pin 46</strong></td>
+            <td>C2 Blu <strong>Pin 3</strong></td>
+            <td>X1 Blk <strong>Pin 67</strong></td>
+            <td>C1 Blu <strong>Pin 4</strong></td>
+            <td>C1 Blu <strong>Pin 1</strong></td>
+            <td>X1 <strong>Pin 46</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Tach Output</strong></td>
+            <td>C2 Red <strong>Pin 10</strong></td>
+            <td>C2 Grn <strong>Pin 10</strong></td>
+            <td>C2 Blu <strong>Pin 35</strong></td>
+            <td>X1 Blk <strong>Pin 48</strong></td>
+            <td>C1 Blu <strong>Pin 48</strong></td>
+            <td>C1 Blu <strong>Pin 25</strong></td>
+            <td>X2 <strong>Pin 40</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Speedo (VSS) Out</strong></td>
+            <td>C2 Red <strong>Pin 50</strong></td>
+            <td>C2 Grn <strong>Pin 50</strong></td>
+            <td>C2 Blu <strong>Pin 5</strong></td>
+            <td>X1 Blk <strong>Pin 57</strong></td>
+            <td>C1 Blu <strong>Pin 21</strong></td>
+            <td>C3 Gry <strong>Pin 42</strong></td>
+            <td>X2 <strong>Pin 8</strong></td>
+          </tr>
+          <tr>
+            <td><strong>OBD2 Data</strong></td>
+            <td>C1-<strong>58</strong> (OBD 2)</td>
+            <td>C1-<strong>58</strong> (OBD 2)</td>
+            <td>C2-<strong>58</strong> (OBD 2)</td>
+            <td>X1-<strong>28/27</strong> (OBD 6/14)</td>
+            <td>C1-<strong>1/2</strong> (OBD 6/14)</td>
+            <td>C3-<strong>53/33</strong> (OBD 6/14)</td>
+            <td>X1-<strong>39/40</strong> (OBD 6/14)</td>
+          </tr>
+          <tr>
+            <td><strong>Fan 1 / Fan 2</strong></td>
+            <td>C1-<strong>42</strong> / C2-<strong>33</strong></td>
+            <td>C1-<strong>42</strong> / C2-<strong>33</strong></td>
+            <td>C1-<strong>46</strong> / C2-<strong>68</strong></td>
+            <td>X1-<strong>58</strong> / X1-<strong>17</strong></td>
+            <td>C1-<strong>36</strong> / C1-<strong>56</strong></td>
+            <td>C3-<strong>49</strong> / C1-<strong>54</strong></td>
+            <td>X1-<strong>59</strong> (PWM/Relay)</td>
+          </tr>
+          <tr>
+            <td><strong>Brake / TCC Input</strong></td>
+            <td>C1-<strong>33</strong> (12V off brk)</td>
+            <td>C1-<strong>33</strong> (12V off brk)</td>
+            <td>C1-<strong>32</strong> (12V off brk)</td>
+            <td>X1-<strong>9</strong> (12V on brk)</td>
+            <td>C1-<strong>32</strong> (12V on brk)</td>
+            <td>C1-<strong>9</strong> (12V on brk)</td>
+            <td>X1-<strong>57</strong> (12V on brk)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<script>
+const MASTER_DATA = __MASTER_DATA_JSON__;
+
+__SHARED_ENGINE_JS__
+
+// ============================================================================
+// DESKTOP STUDIO CONTROLLER
+// ============================================================================
+const STORAGE_KEY = "ls_swap_pinout_progress_v1";
+const CONFIG_KEY = "ls_swap_config_v2";
+
+let currentEcmIdx = 0;
+let currentConnIdx = 0;
+let selectedPinNum = null;
+let currentVerdictFilter = "ALL";
+let currentBankMode = "full";
+let progressState = {};
+
+function loadProgress() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) progressState = JSON.parse(raw);
+  } catch (e) { progressState = {}; }
+
+  try {
+    const rawCfg = localStorage.getItem(CONFIG_KEY);
+    if (rawCfg) {
+      const c = JSON.parse(rawCfg);
+      if (typeof c.ecmIdx === "number" && MASTER_DATA.ecms[c.ecmIdx]) currentEcmIdx = c.ecmIdx;
+      if (c.trans) document.getElementById("cfgTrans").value = c.trans;
+      if (c.throttle) document.getElementById("cfgThrottle").value = c.throttle;
+      if (c.fans) document.getElementById("cfgFans").value = c.fans;
+      if (c.ac) document.getElementById("cfgAC").value = c.ac;
+      if (c.emissions) document.getElementById("cfgEmissions").value = c.emissions;
+    }
+  } catch (e) {}
+}
+
+function saveProgress() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(progressState)); } catch (e) {}
+}
+
+function saveConfig() {
+  try {
+    localStorage.setItem(CONFIG_KEY, JSON.stringify({
+      ecmIdx: currentEcmIdx,
+      ...getDesktopCfg()
+    }));
+  } catch (e) {}
+}
+
+function getDesktopCfg() {
+  return {
+    trans: document.getElementById("cfgTrans").value,
+    throttle: document.getElementById("cfgThrottle").value,
+    fans: document.getElementById("cfgFans").value,
+    ac: document.getElementById("cfgAC").value,
+    emissions: document.getElementById("cfgEmissions").value
+  };
+}
+
+function getPinKey(ecmId, connId, pinNum, idx) {
+  return `${ecmId}__${connId}__${pinNum}__${idx}`;
+}
+
+function switchTab(tabId, btnEl) {
+  document.querySelectorAll(".tab-view").forEach(el => el.classList.remove("active"));
+  document.querySelectorAll(".nav-tab").forEach(el => el.classList.remove("active"));
+  document.getElementById("tab-" + tabId).classList.add("active");
+  if (btnEl) btnEl.classList.add("active");
+}
+
+function initApp() {
+  loadProgress();
+  renderEcmSidebar();
+  selectEcm(currentEcmIdx);
+}
+
+function renderEcmSidebar() {
+  const container = document.getElementById("ecmListContainer");
+  container.innerHTML = MASTER_DATA.ecms.map((ecm, idx) => `
+    <div class="ecm-item ${idx === currentEcmIdx ? 'active' : ''}" onclick="selectEcm(${idx})">
+      <div class="ecm-item-top">
+        <span class="ecm-item-title">${ecm.shortName}</span>
+        <span class="ecm-gen-tag">${ecm.generation.split(" ")[0]} ${ecm.generation.split(" ")[1] || ""}</span>
+      </div>
+      <div class="ecm-item-sub">${ecm.connectorColors} &bull; ${ecm.connectors.length} plugs</div>
+    </div>
+  `).join("");
+}
+
+function selectEcm(idx) {
+  currentEcmIdx = idx;
+  currentConnIdx = 0;
+  selectedPinNum = null;
+  currentBankMode = "full";
+  saveConfig();
+  renderEcmSidebar();
+  renderEcmBanner();
+  renderConnectorTabs();
+  renderCurrentConnector();
+}
+
+function renderEcmBanner() {
+  const ecm = MASTER_DATA.ecms[currentEcmIdx];
+  document.getElementById("ecmBanner").innerHTML = `
+    <div class="ecm-summary-main">
+      <h2 class="ecm-summary-title">${ecm.name}</h2>
+      <div class="ecm-quick-pills">
+        <span class="q-pill"><strong>PCM:</strong> ${ecm.pcmCode}</span>
+        <span class="q-pill"><strong>Plugs:</strong> ${ecm.connectorColors}</span>
+        <span class="q-pill"><strong>Trigger:</strong> ${ecm.reluctor}</span>
+      </div>
+    </div>
+    <details class="ecm-details-toggle">
+      <summary>Controller Specs, Compatible Engines &amp; Service Numbers</summary>
+      <div class="ecm-details-body">
+        <div><strong>Engines:</strong> ${ecm.engines}</div>
+        <div><strong>Service #s:</strong> ${ecm.serviceNumbers.join(", ")}</div>
+        <div><strong>Throttle:</strong> ${ecm.throttleSupport}</div>
+        <div style="grid-column: 1 / -1; color: var(--muted);">${ecm.summary}</div>
+      </div>
+    </details>
+  `;
+}
+
+function renderConnectorTabs() {
+  const ecm = MASTER_DATA.ecms[currentEcmIdx];
+  document.getElementById("connectorTabs").innerHTML = ecm.connectors.map((c, idx) => `
+    <button class="conn-btn ${idx === currentConnIdx ? 'active' : ''}" onclick="selectConnector(${idx})">
+      <span class="conn-dot dot-${c.color}"></span>
+      <span>${c.name}</span>
+    </button>
+  `).join("");
+}
+
+function selectConnector(idx) {
+  currentConnIdx = idx;
+  selectedPinNum = null;
+  currentBankMode = "full";
+  renderConnectorTabs();
+  renderCurrentConnector();
+}
+
+function setDesktopBank(mode) {
+  currentBankMode = mode;
+  ["full", "left", "right"].forEach(m => {
+    const el = document.getElementById("dbank-" + m);
+    if (el) el.classList.toggle("active", m === mode);
+  });
+  renderVisualConnector();
+}
+
+function toggleDesktopDiagram() {
+  const wrap = document.getElementById("diagramCollapsible");
+  const btn = document.getElementById("toggleDiagramBtn");
+  const hidden = wrap.style.display === "none";
+  wrap.style.display = hidden ? "block" : "none";
+  btn.textContent = hidden ? "Hide Diagram" : "Show Diagram";
+}
+
+function setDesktopVerdictFilter(val) {
+  currentVerdictFilter = (currentVerdictFilter === val && val !== "ALL") ? "ALL" : val;
+  renderCurrentConnector();
+}
+
+function onConfigChange() {
+  saveConfig();
+  renderCurrentConnector();
+}
+
+function renderCurrentConnector() {
+  renderVisualConnector();
+  renderPinTable();
+  updateHeaderProgress();
+  if (selectedPinNum !== null) {
+    inspectPin(selectedPinNum, undefined, false);
+  }
+}
+
+function renderVisualConnector() {
+  const ecm = MASTER_DATA.ecms[currentEcmIdx];
+  const conn = ecm.connectors[currentConnIdx];
+  const cfg = getDesktopCfg();
+
+  const built = buildConnectorSVG(ecm, conn, {
+    cfg,
+    progressState,
+    getPinKey,
+    selectedPin: selectedPinNum,
+    activeFilter: currentVerdictFilter,
+    bankMode: currentBankMode,
+    onClickFnName: "onSvgPinClick"
+  });
+
+  document.getElementById("visualConnTitle").textContent = conn.name;
+  document.getElementById("visualConnSub").textContent = built.meta.label;
+
+  const bankBar = document.getElementById("bankZoomBar");
+  if (built.meta.hasBanks) {
+    bankBar.style.display = "inline-flex";
+    ["full", "left", "right"].forEach(m => {
+      document.getElementById("dbank-" + m).classList.toggle("active", m === currentBankMode);
+    });
+  } else {
+    bankBar.style.display = "none";
+  }
+
+  document.getElementById("connectorVisualCasing").innerHTML = built.svg;
+
+  const c = built.counts;
+  const chips = [
+    { id: "ALL", label: "All", dot: "" },
+    { id: "external", label: `Hook Up (${c.external})`, dot: "#22D3EE" },
+    { id: "keep", label: `Keep (${c.keep})`, dot: "#34D399" }
+  ];
+  if (c.repin > 0) chips.push({ id: "repin", label: `Move Pin (${c.repin})`, dot: "#FB7185" });
+  if (c.trans > 0) chips.push({ id: "trans", label: `Auto Trans (${c.trans})`, dot: "#C084FC" });
+  if (c.remove > 0) chips.push({ id: "remove", label: `Remove (${c.remove})`, dot: "#FBBF24" });
+
+  document.getElementById("statusLegend").innerHTML = chips.map(ch => `
+    <button class="f-chip ${currentVerdictFilter === ch.id ? 'active' : ''}" onclick="setDesktopVerdictFilter('${ch.id}')">
+      ${ch.dot ? `<span class="f-dot" style="background:${ch.dot};"></span>` : ""}
+      ${ch.label}
+    </button>
+  `).join("");
+}
+
+function onSvgPinClick(pinVal) {
+  inspectPin(pinVal, undefined, true);
+}
+
+function inspectPin(pinVal, specificIdx, shouldScrollRow) {
+  selectedPinNum = String(pinVal);
+  const ecm = MASTER_DATA.ecms[currentEcmIdx];
+  const conn = ecm.connectors[currentConnIdx];
+  const cfg = getDesktopCfg();
+
+  // Auto-pan bank zoom if user clicked a table row in the other bank
+  if (conn.layoutType === "pcm_80" && currentBankMode !== "full") {
+    const n = parseInt(pinVal, 10);
+    const inLeft = (n >= 1 && n <= 20) || (n >= 41 && n <= 60);
+    if (currentBankMode === "left" && !inLeft) currentBankMode = "right";
+    if (currentBankMode === "right" && inLeft) currentBankMode = "left";
+  }
+
+  let entries = [];
+  if (specificIdx !== undefined && conn.pins[specificIdx]) {
+    entries = [{ p: conn.pins[specificIdx], idx: specificIdx }];
+  } else {
+    conn.pins.forEach((p, i) => {
+      if (String(p.pin) === String(pinVal)) entries.push({ p, idx: i });
+    });
+  }
+
+  const box = document.getElementById("pinInspectorBox");
+
+  if (entries.length === 0) {
+    box.innerHTML = `
+      <div class="inspector-grid">
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:15px;font-weight:800;color:#FFF;">${conn.id} Cavity ${pinVal}</span>
+            <span class="verdict-badge verdict-empty">Empty Factory Cavity</span>
+          </div>
+          <div style="font-size:13px;color:var(--text-2);margin-top:4px;">
+            This physical cavity exists in the OEM ${conn.name} housing, but has no factory wire populated for this application. Leave sealed/empty.
+          </div>
+        </div>
+      </div>
+    `;
+  } else {
+    const primary = entries[0];
+    const v = computeVerdictWithConfig(primary.p, ecm, conn, cfg);
+    const key = getPinKey(ecm.id, conn.id, primary.p.pin, primary.idx);
+    const st = progressState[key] || {};
+    const sw = getWireSwatchStyle(primary.p.wire);
+
+    const extraVariants = entries.length > 1
+      ? `<div style="margin-top:6px;font-size:12px;color:var(--accent);"><strong>${entries.length} RPO/Year Variants on Cavity ${pinVal}:</strong> ${entries.map(e => `${e.p.function} (${e.p.wire})`).join("  •  ")}</div>`
+      : "";
+
+    box.innerHTML = `
+      <div class="inspector-grid">
+        <div style="flex:1;min-width:260px;">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:5px;">
+            <span style="font-size:16px;font-weight:800;color:#FFF;">${conn.id} Pin ${primary.p.pin}</span>
+            <span class="wire-pill"><span class="wire-swatch" style="${sw}"></span> ${primary.p.wire}</span>
+            ${primary.p.circuit && primary.p.circuit !== "--" ? `<span style="font-size:12px;color:var(--muted);">Circuit #${primary.p.circuit}</span>` : ""}
+            <span class="verdict-badge verdict-${v.status}">${v.badgeText}</span>
+          </div>
+          <div style="font-size:14px;font-weight:700;color:#FFF;">${primary.p.function}</div>
+          <div style="font-size:12.5px;color:var(--text-2);margin-top:4px;">
+            ${v.plainAction ? `<strong style="color:var(--rose);display:block;margin-bottom:3px;">${v.plainAction}</strong>` : ""}
+            ${primary.p.notes}
+          </div>
+          ${extraVariants}
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <button class="btn ${st.done ? '' : 'btn-primary'}" onclick="togglePinDone('${key}')">
+            ${st.done ? '↩️ Undo Done' : '✓ Mark Wire Done'}
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  renderVisualConnector();
+  renderPinTable();
+
+  if (shouldScrollRow) {
+    const row = document.getElementById("pinrow-" + pinVal);
+    if (row) row.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+}
+
+function togglePinDone(key) {
+  if (!progressState[key]) progressState[key] = {};
+  progressState[key].done = !progressState[key].done;
+  saveProgress();
+  renderCurrentConnector();
+}
+
+function updatePinUserNote(key, val) {
+  if (!progressState[key]) progressState[key] = {};
+  progressState[key].note = val;
+  saveProgress();
+}
+
+function renderPinTable() {
+  const ecm = MASTER_DATA.ecms[currentEcmIdx];
+  const conn = ecm.connectors[currentConnIdx];
+  const cfg = getDesktopCfg();
+  const tbody = document.getElementById("pinTableBody");
+
+  const searchQ = document.getElementById("pinSearchInput").value.trim().toLowerCase();
+  const sysFilter = document.getElementById("systemFilter").value;
+  const hideEmpty = document.getElementById("hideEmptyChk").checked;
+
+  let rowsHtml = "";
+  let shownCount = 0;
+
+  conn.pins.forEach((p, idx) => {
+    const v = computeVerdictWithConfig(p, ecm, conn, cfg);
+    const isSel = String(selectedPinNum) === String(p.pin);
+
+    if (hideEmpty && v.status === "empty" && !searchQ && !isSel) return;
+    if (sysFilter !== "ALL" && p.system !== sysFilter) return;
+    if (currentVerdictFilter !== "ALL" && v.status !== currentVerdictFilter) return;
+
+    if (searchQ) {
+      const hay = `pin ${p.pin} ${p.wire} ${p.circuit} ${p.function} ${p.notes} ${p.system}`.toLowerCase();
+      if (!hay.includes(searchQ)) return;
+    }
+
+    shownCount++;
+    const key = getPinKey(ecm.id, conn.id, p.pin, idx);
+    const st = progressState[key] || {};
+    const sw = getWireSwatchStyle(p.wire);
+
+    rowsHtml += `
+      <tr id="pinrow-${p.pin}" class="${isSel ? 'row-selected' : ''} ${st.done ? 'row-done' : ''}" onclick="inspectPin('${p.pin}', ${idx}, false)">
+        <td onclick="event.stopPropagation()">
+          <input type="checkbox" style="width:16px;height:16px;cursor:pointer;accent-color:#34D399;" ${st.done ? "checked" : ""} onchange="togglePinDone('${key}')">
+        </td>
+        <td style="font-weight:800;font-size:14px;color:#FFF;">${p.pin}</td>
+        <td>
+          <span class="wire-pill">
+            <span class="wire-swatch" style="${sw}"></span>
+            <span>${p.wire}</span>
+          </span>
+        </td>
+        <td style="font-family:monospace;font-weight:600;color:var(--text-2);">${p.circuit}</td>
+        <td>
+          <div style="font-weight:700;color:#FFF;">${p.function}</div>
+          <div style="font-size:11px;color:var(--muted);">${p.system}</div>
+        </td>
+        <td><span class="verdict-badge verdict-${v.status}">${v.shortLabel}</span></td>
+        <td onclick="event.stopPropagation()">
+          <div style="font-size:12.5px;color:var(--text-2);">
+            ${v.plainAction ? `<strong style="color:var(--rose);display:block;margin-bottom:2px;">${v.plainAction}</strong>` : ""}
+            ${p.notes}
+          </div>
+          <input type="text" class="user-note-input" placeholder="✏️ Add custom note for Pin ${p.pin}..."
+                 value="${(st.note || '').replace(/"/g, '&quot;')}"
+                 oninput="updatePinUserNote('${key}', this.value)">
+        </td>
+      </tr>
+    `;
+  });
+
+  document.getElementById("shownRowCount").textContent = shownCount;
+  tbody.innerHTML = rowsHtml || `<tr><td colspan="7" style="text-align:center;padding:28px;color:var(--muted);">No circuits match your current filter. (Uncheck "Hide Empty Cavities" or click "All" above to see every slot.)</td></tr>`;
+}
+
+function updateHeaderProgress() {
+  const ecm = MASTER_DATA.ecms[currentEcmIdx];
+  const cfg = getDesktopCfg();
+  let total = 0, done = 0;
+  ecm.connectors.forEach(conn => {
+    conn.pins.forEach((p, idx) => {
+      const v = computeVerdictWithConfig(p, ecm, conn, cfg);
+      if (v.status !== "empty") {
+        total++;
+        const k = getPinKey(ecm.id, conn.id, p.pin, idx);
+        if (progressState[k] && progressState[k].done) done++;
+      }
+    });
+  });
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+  document.getElementById("hdrProgressText").textContent = `${done} / ${total} Done`;
+  document.getElementById("hdrProgressFill").style.width = `${pct}%`;
+}
+
+function checkDbcServiceNum() {
+  const val = document.getElementById("servNumInput").value.trim();
+  const box = document.getElementById("dbcCheckResult");
+  if (!val) {
+    box.className = "alert-box alert-info";
+    box.innerHTML = "Type a PCM Service Number above to verify DBC IAC Stepper &amp; 12V A/C Request support.";
+    return;
+  }
+  const dbcSupported = {
+    "09354896": "1999–2000 P01 Blue/Red — ✅ YES! Supports BOTH Drive-By-Cable (IAC stepper) & early DBW, plus 12V+ A/C Request.",
+    "12200411": "2001–2002 P01 Blue/Red ('0411') — ✅ YES! Supports BOTH Drive-By-Cable (IAC stepper) & early DBW, plus 12V+ A/C Request.",
+    "12576106": "2003 P59 Blue/Green (Hwd 12570558) — ✅ YES! Has the B67U1 IAC stepper chip and supports Drive-By-Cable!",
+    "12581565": "2003 P59 Blue/Green — ✅ YES! Supports Drive-By-Cable (IAC stepper) + 12V+ A/C Request!",
+    "12586243": "2004 P59 Blue/Green (GTO / Express Van, Hwd 12583659) — ✅ YES! Has the B67U1 IAC stepper chip and supports Drive-By-Cable!",
+    "12589462": "2005–2006 P59 Blue/Green (Express Van, Hwd 12589161) — ✅ YES! Has the B67U1 IAC stepper chip and supports Drive-By-Cable!",
+    "12602801": "2007 Classic P59 Blue/Green (Express Van, Hwd 12589161) — ✅ YES! Has the B67U1 IAC stepper chip and supports Drive-By-Cable!"
+  };
+  const dbwOnly = {
+    "12582605": "2003 P59 Blue/Green — ❌ NO! Missing B67U1 IAC stepper driver chip. Drive-By-Wire ONLY.",
+    "12586242": "2004 P59 Blue/Green (Truck/SUV) — ❌ NO! Missing B67U1 IAC stepper driver chip. Drive-By-Wire ONLY.",
+    "12589463": "2005–2006 P59 Blue/Green (Truck/SUV) — ❌ NO! Missing B67U1 IAC stepper driver chip. Drive-By-Wire ONLY.",
+    "12602802": "2007 Classic P59 Blue/Green — ❌ NO! Missing B67U1 IAC stepper driver chip. Drive-By-Wire ONLY."
+  };
+  if (dbcSupported[val]) {
+    box.className = "alert-box alert-info";
+    box.innerHTML = `<strong>Service No. ${val}:</strong> ${dbcSupported[val]}`;
+  } else if (dbwOnly[val]) {
+    box.className = "alert-box alert-danger";
+    box.innerHTML = `<strong>Service No. ${val}:</strong> ${dbwOnly[val]}`;
+  } else {
+    box.className = "alert-box";
+    box.innerHTML = `<strong>Service No. ${val}:</strong> Not in standard P01/P59 list. Open the 4 Torx screws on the PCM cover and check board location <strong>B67U1</strong> for the IAC stepper driver chip!`;
+  }
+}
+
+function exportProgressJSON() {
+  const payload = { config: { ecmIdx: currentEcmIdx, ...getDesktopCfg() }, progress: progressState };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "ls_swap_harness_progress.json";
+  a.click();
+}
+
+function importProgressJSON(ev) {
+  const file = ev.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      if (parsed && parsed.progress && typeof parsed.progress === "object") {
+        progressState = parsed.progress;
+        if (parsed.config) {
+          if (typeof parsed.config.ecmIdx === "number" && MASTER_DATA.ecms[parsed.config.ecmIdx]) currentEcmIdx = parsed.config.ecmIdx;
+          if (parsed.config.trans) document.getElementById("cfgTrans").value = parsed.config.trans;
+          if (parsed.config.throttle) document.getElementById("cfgThrottle").value = parsed.config.throttle;
+          if (parsed.config.fans) document.getElementById("cfgFans").value = parsed.config.fans;
+          if (parsed.config.ac) document.getElementById("cfgAC").value = parsed.config.ac;
+          if (parsed.config.emissions) document.getElementById("cfgEmissions").value = parsed.config.emissions;
+          saveConfig();
+        }
+      } else {
+        progressState = parsed;
+      }
+      saveProgress();
+      selectEcm(currentEcmIdx);
+      alert("Loaded harness build progress and notes!");
+    } catch (err) {
+      alert("Invalid JSON file.");
+    }
+  };
+  reader.readAsText(file);
+}
+
+function exportCurrentCSV() {
+  const ecm = MASTER_DATA.ecms[currentEcmIdx];
+  const conn = ecm.connectors[currentConnIdx];
+  const cfg = getDesktopCfg();
+  let csv = "Pin,Wire Color,Circuit No,Function,System,Swap Verdict,Hookup Instructions,Custom Builder Note\n";
+  conn.pins.forEach((p, idx) => {
+    const v = computeVerdictWithConfig(p, ecm, conn, cfg);
+    const key = getPinKey(ecm.id, conn.id, p.pin, idx);
+    const uNote = (progressState[key] && progressState[key].note) ? progressState[key].note : "";
+    const row = [p.pin, p.wire, p.circuit, p.function, p.system, v.badgeText, p.notes, uNote]
+      .map(s => `"${String(s || '').replace(/"/g, '""')}"`).join(",");
+    csv += row + "\n";
+  });
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `${ecm.id}_${conn.id}_pinout.csv`;
+  a.click();
+}
+
+window.addEventListener("DOMContentLoaded", initApp);
+</script>
+</body>
+</html>

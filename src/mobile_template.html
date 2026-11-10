@@ -1,0 +1,1724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>LS Swap Pinout Pro</title>
+<style>
+  :root {
+    --bg: #0B0D12;
+    --surface: #141821;
+    --surface-2: #1C2230;
+    --surface-3: #252D3F;
+    --border: rgba(255, 255, 255, 0.09);
+    --border-strong: rgba(255, 255, 255, 0.16);
+    --text: #F8FAFC;
+    --text-2: #CBD5E1;
+    --text-muted: #8B98AD;
+    --blue: #38BDF8;
+    --blue-solid: #0284C7;
+    --cyan: #22D3EE;
+    --green: #34D399;
+    --purple: #C084FC;
+    --amber: #FBBF24;
+    --rose: #FB7185;
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  * {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", Roboto, sans-serif;
+    font-size: 15px;
+    line-height: 1.45;
+    overflow-x: hidden;
+    padding-bottom: calc(80px + var(--safe-bottom));
+    user-select: none;
+  }
+
+  /* Compact Sticky Top Bar */
+  .top-navbar {
+    position: sticky;
+    top: 0;
+    z-index: 90;
+    background: rgba(11, 13, 18, 0.9);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: calc(10px + var(--safe-top)) 14px 10px;
+  }
+
+  .nav-bar-inner {
+    max-width: 780px;
+    margin: 0 auto;
+  }
+
+  .nav-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .app-title {
+    font-size: 19px;
+    font-weight: 800;
+    letter-spacing: -0.4px;
+    margin: 0;
+    color: #FFFFFF;
+    white-space: nowrap;
+  }
+
+  .nav-right-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .ecm-selector-btn {
+    background: var(--surface-2);
+    color: var(--blue);
+    border: 1px solid rgba(56, 189, 248, 0.38);
+    padding: 7px 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    max-width: 220px;
+    transition: transform 0.1s ease, background 0.12s ease;
+  }
+  .ecm-selector-btn span:first-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .ecm-selector-btn:active {
+    transform: scale(0.97);
+    background: var(--surface-3);
+  }
+
+  .icon-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text-2);
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .icon-btn:active { background: var(--surface-3); }
+
+  /* Search Bar */
+  .search-wrap {
+    margin-top: 9px;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .search-input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 9px 34px 9px 34px;
+    color: var(--text);
+    font-size: 14.5px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .search-input:focus {
+    border-color: var(--blue);
+  }
+  .search-input::placeholder {
+    color: var(--text-muted);
+  }
+  .search-icon {
+    position: absolute;
+    left: 11px;
+    color: var(--text-muted);
+    font-size: 13.5px;
+    pointer-events: none;
+  }
+  .search-clear {
+    position: absolute;
+    right: 8px;
+    background: var(--surface-3);
+    color: var(--text);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 800;
+    border: none;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  /* Views */
+  .app-view {
+    display: none;
+    padding: 12px 12px 24px;
+    max-width: 780px;
+    margin: 0 auto;
+  }
+  .app-view.active {
+    display: block;
+    animation: viewFade 0.16s ease;
+  }
+  @keyframes viewFade {
+    from { opacity: 0; transform: translateY(3px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Compact Active Setup Bar */
+  .setup-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+    cursor: pointer;
+  }
+  .setup-strip:active { background: var(--surface-2); }
+  .setup-strip-text {
+    font-size: 12.5px;
+    color: var(--text-2);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .setup-strip-text strong {
+    color: #FFFFFF;
+    font-weight: 700;
+  }
+  .setup-edit-link {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--blue);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* Connector Selector Pills */
+  .conn-scroll {
+    display: flex;
+    gap: 7px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    margin-bottom: 10px;
+    scrollbar-width: none;
+  }
+  .conn-scroll::-webkit-scrollbar { display: none; }
+  .conn-pill {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text-2);
+    padding: 8px 13px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    cursor: pointer;
+    transition: all 0.14s;
+  }
+  .conn-pill.active {
+    background: rgba(56, 189, 248, 0.14);
+    border-color: var(--blue);
+    color: #FFFFFF;
+  }
+  .dot-ind {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot-blue { background: #3B82F6; box-shadow: 0 0 6px rgba(59,130,246,0.8); }
+  .dot-red { background: #EF4444; box-shadow: 0 0 6px rgba(239,68,68,0.8); }
+  .dot-green { background: #22C55E; box-shadow: 0 0 6px rgba(34,197,94,0.8); }
+  .dot-black { background: #52525B; border: 1px solid #A1A1AA; }
+  .dot-gray { background: #CBD5E1; }
+  .dot-clear { background: rgba(248, 250, 252, 0.9); border: 1.5px solid #94A3B8; box-shadow: 0 0 6px rgba(248,250,252,0.55); }
+
+  /* Factory Connector Card */
+  .connector-card {
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 14px;
+    padding: 11px 12px 12px;
+    margin-bottom: 12px;
+  }
+  .connector-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .connector-card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #FFFFFF;
+  }
+  .connector-card-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 1px;
+  }
+  .collapse-btn {
+    background: var(--surface-2);
+    color: var(--text-2);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 4px 9px;
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  /* Bank Zoom Bar for Wide 80-Pin Gen III Connectors */
+  .bank-bar {
+    display: flex;
+    gap: 4px;
+    background: #0B0D12;
+    padding: 3px;
+    border-radius: 9px;
+    border: 1px solid var(--border);
+    margin-bottom: 9px;
+  }
+  .bank-btn {
+    flex: 1;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 6px 6px;
+    border-radius: 6px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.14s;
+  }
+  .bank-btn.active {
+    background: var(--surface-3);
+    color: #FFFFFF;
+  }
+
+  .svg-stage {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 10px;
+    background: #07090E;
+    padding: 6px 4px;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .tap-hint {
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 7px;
+  }
+
+  /* Interactive Filter Legend Chips */
+  .filter-chips {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding-top: 9px;
+    margin-top: 8px;
+    border-top: 1px solid var(--border);
+    scrollbar-width: none;
+  }
+  .filter-chips::-webkit-scrollbar { display: none; }
+  .f-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 700;
+    background: var(--surface-2);
+    color: var(--text-2);
+    border: 1px solid var(--border);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+  .f-chip.active {
+    background: #FFFFFF;
+    color: #090B10;
+    border-color: #FFFFFF;
+  }
+  .f-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  /* List Header & Cards */
+  .section-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 12px 4px 7px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  .toggle-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-2);
+    text-transform: none;
+    letter-spacing: 0;
+    cursor: pointer;
+    background: var(--surface);
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+  }
+  .toggle-pill.on {
+    border-color: var(--blue);
+    color: var(--blue);
+    background: rgba(56, 189, 248, 0.12);
+  }
+
+  .card-box {
+    background: var(--surface);
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+  .card-pad {
+    padding: 14px 15px;
+  }
+
+  /* Clean Pin List Rows */
+  .pin-row {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 11px 13px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.12s;
+  }
+  .pin-row:last-child { border-bottom: none; }
+  .pin-row:active { background: var(--surface-2); }
+  .pin-row.row-done { opacity: 0.44; }
+  .pin-row.row-selected {
+    background: rgba(56, 189, 248, 0.1);
+  }
+
+  .pin-badge {
+    min-width: 42px;
+    height: 42px;
+    padding: 0 5px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 14px;
+    flex-shrink: 0;
+    border: 1px solid transparent;
+  }
+  .pin-badge small {
+    font-size: 8px;
+    font-weight: 700;
+    opacity: 0.75;
+    text-transform: uppercase;
+    line-height: 1;
+    margin-bottom: 1px;
+  }
+
+  .st-external { background: rgba(34, 211, 238, 0.14); color: var(--cyan); border-color: rgba(34, 211, 238, 0.4); }
+  .st-keep     { background: rgba(52, 211, 153, 0.13); color: var(--green); border-color: rgba(52, 211, 153, 0.38); }
+  .st-repin    { background: rgba(251, 113, 133, 0.18); color: var(--rose); border-color: rgba(251, 113, 133, 0.5); }
+  .st-trans    { background: rgba(192, 132, 252, 0.15); color: var(--purple); border-color: rgba(192, 132, 252, 0.4); }
+  .st-remove   { background: rgba(251, 191, 36, 0.13); color: var(--amber); border-color: rgba(251, 191, 36, 0.38); }
+  .st-empty    { background: #10131B; color: #64748B; border-color: #222836; }
+
+  .pin-body {
+    flex: 1;
+    min-width: 0;
+  }
+  .pin-title {
+    font-weight: 650;
+    font-size: 14.5px;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .pin-meta {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--text-muted);
+    flex-wrap: wrap;
+  }
+  .wire-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255,255,255,0.06);
+    padding: 2px 7px;
+    border-radius: 5px;
+    font-family: "SF Mono", Consolas, monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-2);
+  }
+  .wire-swatch {
+    width: 15px;
+    height: 10px;
+    border-radius: 2.5px;
+    border: 1px solid rgba(255,255,255,0.35);
+    flex-shrink: 0;
+  }
+
+  .action-tag {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+  .at-external { background: rgba(34, 211, 238, 0.14); color: var(--cyan); }
+  .at-keep     { background: rgba(52, 211, 153, 0.13); color: var(--green); }
+  .at-repin    { background: rgba(251, 113, 133, 0.2); color: var(--rose); }
+  .at-trans    { background: rgba(192, 132, 252, 0.15); color: var(--purple); }
+  .at-remove   { background: rgba(251, 191, 36, 0.14); color: var(--amber); }
+  .at-empty    { background: rgba(148, 163, 184, 0.1); color: var(--text-muted); }
+
+  .done-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1.8px solid #3F4A5E;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: transparent;
+    font-size: 14px;
+    flex-shrink: 0;
+    transition: all 0.14s;
+  }
+  .done-btn.checked {
+    background: var(--green);
+    border-color: var(--green);
+    color: #062417;
+    font-weight: 900;
+  }
+
+  /* Settings Rows (My Swap Tab) */
+  .setting-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 15px;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+  }
+  .setting-row:last-child { border-bottom: none; }
+  .setting-label {
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .setting-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+  .setting-select {
+    background: var(--surface-2);
+    color: var(--blue);
+    border: 1px solid var(--border-strong);
+    padding: 8px 10px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 700;
+    outline: none;
+    max-width: 175px;
+  }
+
+  .progress-track {
+    width: 100%;
+    height: 8px;
+    background: #0B0D12;
+    border-radius: 99px;
+    overflow: hidden;
+    margin: 10px 0 4px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue), var(--green));
+    border-radius: 99px;
+    transition: width 0.25s ease;
+  }
+
+  /* Accordion Cards for Guides / Reference / Diagnostics */
+  details.acc-card {
+    background: var(--surface);
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  details.acc-card summary {
+    list-style: none;
+    padding: 14px 15px;
+    font-size: 14.5px;
+    font-weight: 700;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  details.acc-card summary::-webkit-details-marker { display: none; }
+  details.acc-card summary::after {
+    content: "▾";
+    color: var(--text-muted);
+    font-size: 14px;
+    transition: transform 0.18s ease;
+  }
+  details[open].acc-card summary::after {
+    transform: rotate(180deg);
+    color: var(--blue);
+  }
+  details[open].acc-card summary {
+    border-bottom: 1px solid var(--border);
+  }
+  .acc-body {
+    padding: 13px 15px 15px;
+    font-size: 13.5px;
+    color: var(--text-2);
+  }
+
+  /* Clean Tables & Schematic Blocks */
+  .clean-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+  }
+  .clean-table th, .clean-table td {
+    padding: 8px 9px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    vertical-align: top;
+  }
+  .clean-table tr:last-child td { border-bottom: none; }
+  .clean-table th {
+    color: var(--text-muted);
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  .code-diagram {
+    background: #080A0F;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    font-family: "SF Mono", Consolas, monospace;
+    font-size: 11.5px;
+    overflow-x: auto;
+    white-space: pre;
+    color: #E2E8F0;
+    line-height: 1.42;
+  }
+
+  /* Buttons */
+  .btn-block {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 11px;
+    border: none;
+    font-size: 14.5px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    margin-top: 10px;
+  }
+  .btn-blue { background: var(--blue-solid); color: #FFFFFF; }
+  .btn-green { background: var(--green); color: #052E16; }
+  .btn-subtle { background: var(--surface-2); color: var(--text); border: 1px solid var(--border); }
+
+  /* Bottom Navigation Bar */
+  .bottom-tabbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 95;
+    background: rgba(17, 20, 28, 0.94);
+    backdrop-filter: saturate(180%) blur(22px);
+    -webkit-backdrop-filter: saturate(180%) blur(22px);
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-around;
+    padding: 6px 4px calc(6px + var(--safe-bottom));
+  }
+  .tabbar-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    padding: 4px 0;
+    font-size: 10.5px;
+    font-weight: 650;
+    cursor: pointer;
+    transition: color 0.14s;
+  }
+  .tabbar-item svg {
+    width: 21px;
+    height: 21px;
+    fill: currentColor;
+  }
+  .tabbar-item.active {
+    color: var(--blue);
+  }
+
+  /* Slide-Up Modal Sheets */
+  .sheet-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    z-index: 200;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.18s ease;
+  }
+  .sheet-backdrop.open {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    opacity: 1;
+  }
+  .bottom-sheet {
+    width: 100%;
+    max-width: 680px;
+    max-height: 86vh;
+    background: var(--surface);
+    border-radius: 20px 20px 0 0;
+    border-top: 1px solid var(--border-strong);
+    padding: 10px 16px calc(22px + var(--safe-bottom));
+    overflow-y: auto;
+    box-shadow: 0 -12px 40px rgba(0,0,0,0.65);
+  }
+  .sheet-handle {
+    width: 38px;
+    height: 4.5px;
+    background: #3F4A5E;
+    border-radius: 99px;
+    margin: 2px auto 14px;
+  }
+</style>
+</head>
+<body>
+
+<!-- COMPACT STICKY TOP BAR -->
+<header class="top-navbar">
+  <div class="nav-bar-inner">
+    <div class="nav-row">
+      <div style="display:flex;align-items:center;gap:6px;">
+        <h1 class="app-title" id="navTitle">LS Pinout</h1>
+        <span style="font-size:10px;font-weight:800;padding:2px 5px;border-radius:5px;background:rgba(56,189,248,0.16);color:#38BDF8;">v2.1</span>
+      </div>
+      <div class="nav-right-controls">
+        <button class="ecm-selector-btn" onclick="openEcmSheet()">
+          <span id="activeEcmShort">99–02 Vortec (0411)</span>
+          <span>▾</span>
+        </button>
+        <button class="icon-btn" onclick="openSpecsSheet()" title="Controller Specs & Part Numbers">ℹ️</button>
+      </div>
+    </div>
+
+    <div id="pinoutSearchWrap" class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="mobileSearch" class="search-input" placeholder="Search pin #, wire color, tach, fuel pump, fan..." oninput="onSearchInput()">
+      <button class="search-clear" id="searchClearBtn" onclick="clearSearch()">✕</button>
+    </div>
+  </div>
+</header>
+
+<!-- ======================================================================= -->
+<!-- TAB 1: PINOUT EXPLORER                                                  -->
+<!-- ======================================================================= -->
+<main id="view-pinouts" class="app-view active">
+  <!-- 1-Line Active Swap Profile Strip -->
+  <div class="setup-strip" onclick="switchMobileTab('build', 'My Swap Setup')">
+    <div class="setup-strip-text" id="setupSummaryText">
+      <strong>My Setup:</strong> 4L60E • Auto Throttle • Elec Fans
+    </div>
+    <span class="setup-edit-link">Customize ▸</span>
+  </div>
+
+  <!-- Connector Selector -->
+  <div id="connPillsBar" class="conn-scroll"></div>
+
+  <!-- OEM Factory Connector Diagram Card -->
+  <div class="connector-card">
+    <div class="connector-card-head">
+      <div>
+        <div class="connector-card-title" id="visConnTitle">Factory Connector View</div>
+        <div class="connector-card-sub" id="visConnSub">OEM Housing Layout</div>
+      </div>
+      <button class="collapse-btn" id="collapseVisBtn" onclick="toggleVisualizer()">Hide Diagram</button>
+    </div>
+
+    <div id="visualizerBody">
+      <!-- Bank Magnifier (shown only on wide 2x40 Gen III 80-pin plugs) -->
+      <div class="bank-bar" id="bankZoomBar" style="display:none;">
+        <button class="bank-btn active" id="bankbtn-full" onclick="setBankMode('full')">Full Plug (1–80)</button>
+        <button class="bank-btn" id="bankbtn-left" onclick="setBankMode('left')">🔍 Left (1–20 / 41–60)</button>
+        <button class="bank-btn" id="bankbtn-right" onclick="setBankMode('right')">🔍 Right (21–40 / 61–80)</button>
+      </div>
+
+      <div id="svgStage" class="svg-stage"></div>
+      <div class="tap-hint" id="tapHintText">Tap any cavity above to see wire color &amp; what to do</div>
+    </div>
+
+    <!-- Clean Interactive Legend / Filter Chips -->
+    <div class="filter-chips" id="verdictChipBar"></div>
+  </div>
+
+  <!-- Circuit List -->
+  <div class="section-bar">
+    <span id="pinListCountLabel">Circuits</span>
+    <button type="button" class="toggle-pill" id="showEmptyBtn" onclick="toggleShowEmpty()">Show Empty</button>
+  </div>
+  <div class="card-box" id="mobilePinList"></div>
+</main>
+
+<!-- ======================================================================= -->
+<!-- TAB 2: MY SWAP SETUP & PROGRESS                                         -->
+<!-- ======================================================================= -->
+<section id="view-build" class="app-view">
+  <div class="section-bar"><span>Harness Check-Off Progress</span></div>
+  <div class="card-box card-pad">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;">
+      <div style="font-size:16px;font-weight:750;" id="progressStatsTitle">0 Wires Checked Off</div>
+      <div style="font-size:14px;font-weight:800;color:var(--green);" id="progressPctBadge">0%</div>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressBarFill" style="width:0%;"></div>
+    </div>
+    <div style="font-size:12px;color:var(--text-muted);margin-top:4px;" id="progressSubText">
+      Tap the circle on the right of any pin as you label, depin, or wire your harness.
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button class="btn-block btn-blue" style="margin:0;flex:1;" onclick="shareOrExportBuild()">📤 Share / Save</button>
+      <button class="btn-block btn-subtle" style="margin:0;flex:1;" onclick="resetCurrentProgress()">Reset Checks</button>
+    </div>
+  </div>
+
+  <div class="section-bar"><span>My Swap Options (Updates All Pin Verdicts Live)</span></div>
+  <div class="card-box">
+    <div class="setting-row">
+      <div>
+        <div class="setting-label">Transmission</div>
+        <div class="setting-sub">Highlights 4L80E repins or manual removals</div>
+      </div>
+      <select id="mCfgTrans" class="setting-select" onchange="onBuildConfigChange()">
+        <option value="4l60e">4L60E / 4L65E / 4L70E</option>
+        <option value="4l80e">4L80E / 4L85E (Repin)</option>
+        <option value="6l80e">6L80E / 6L90E (CAN)</option>
+        <option value="manual">Manual / TH350 / TH400</option>
+      </select>
+    </div>
+
+    <div class="setting-row">
+      <div>
+        <div class="setting-label">Throttle Setup</div>
+        <div class="setting-sub">Cable throttle vs electronic gas pedal</div>
+      </div>
+      <select id="mCfgThrottle" class="setting-select" onchange="onBuildConfigChange()">
+        <option value="auto">Match ECM Default</option>
+        <option value="dbc">Cable Throttle (DBC)</option>
+        <option value="dbw">Electronic Pedal (DBW)</option>
+      </select>
+    </div>
+
+    <div class="setting-row">
+      <div>
+        <div class="setting-label">Cooling Fans</div>
+        <div class="setting-sub">PCM ground triggers for Fan 1 &amp; Fan 2</div>
+      </div>
+      <select id="mCfgFans" class="setting-select" onchange="onBuildConfigChange()">
+        <option value="pcm">PCM Electric Fans</option>
+        <option value="mech">Belt / Standalone Fan</option>
+      </select>
+    </div>
+
+    <div class="setting-row">
+      <div>
+        <div class="setting-label">Air Conditioning</div>
+        <div class="setting-sub">Delete OEM A/C (Vintage Air) or keep PCM A/C</div>
+      </div>
+      <select id="mCfgAC" class="setting-select" onchange="onBuildConfigChange()">
+        <option value="delete">No A/C or Vintage Air</option>
+        <option value="keep">Keep OEM PCM A/C</option>
+      </select>
+    </div>
+
+    <div class="setting-row">
+      <div>
+        <div class="setting-label">Emissions &amp; Rear O2s</div>
+        <div class="setting-sub">Off-road standalone vs 50-state legal</div>
+      </div>
+      <select id="mCfgEmissions" class="setting-select" onchange="onBuildConfigChange()">
+        <option value="offroad">Standalone (Delete)</option>
+        <option value="emissions">Keep All Emissions</option>
+      </select>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================================= -->
+<!-- TAB 3: WIRING GUIDES & CONVERSION WIZARDS                               -->
+<!-- ======================================================================= -->
+<section id="view-wizards" class="app-view">
+  <details class="acc-card" open>
+    <summary>🔋 Standalone 4-Fuse &amp; 2-Relay Box Diagram</summary>
+    <div class="acc-body">
+      <p style="margin:0 0 8px;">Powers any Gen III (97–07) swap using 1 Constant Battery fuse, 1 Key-On Ignition Relay feeding 3 fuses, and 1 Fuel Pump Relay:</p>
+      <div class="code-diagram">[BATTERY 12V+ CONSTANT]
+ ├──► [FUSE 1: 15A B+] ──► PCM C1-20, C1-57 + OBD2 Pin 16
+ ├──► [MAIN IGN RELAY Pin 30]
+ │     ├─ Pin 86: Key Switch 12V+ (HOT IN RUN &amp; CRANK!)
+ │     ├─ Pin 85: Ground
+ │     └─ Pin 87 (Feeds 3 Fuses):
+ │         ├─► [FUSE 2: 15A] Coils &amp; Inj Bank 1 (1,3,5,7)
+ │         ├─► [FUSE 3: 15A] Coils &amp; Inj Bank 2 (2,4,6,8)
+ │         └─► [FUSE 4: 15A] PCM C1-19 &amp; 75, MAF, O2, Trans E
+ └──► [FUEL PUMP RELAY Pin 30 (20A Fuse)]
+       ├─ Pin 85: PCM Fuel Pump Trigger (C2-9 DK GRN/WHT 12V+)
+       ├─ Pin 86: Ground
+       └─ Pin 87: Gray Wire to Fuel Pump (+)</div>
+    </div>
+  </details>
+
+  <details class="acc-card">
+    <summary>🔍 OBD2 Port (16-Pin) Standalone Wiring</summary>
+    <div class="acc-body">
+      <p style="margin:0 0 8px;">Only 4 wires needed on Gen III (5 wires + 120Ω resistor across Pins 6 &amp; 14 on Gen IV/V CAN):</p>
+      <table class="clean-table">
+        <thead><tr><th>OBD2 Pin</th><th>Function</th><th>Connects To</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Pin 2</strong></td><td>Class 2 Data (PPL)</td><td>Gen III C1 Blue <strong>Pin 58</strong> (C2-58 on '98)</td></tr>
+          <tr><td><strong>Pin 4 &amp; 5</strong></td><td>Grounds (BLK)</td><td>Engine Block / Chassis Ground</td></tr>
+          <tr><td><strong>Pin 6</strong></td><td>CAN High (+)</td><td>Gen IV/V CAN+ (Add 120Ω to Pin 14)</td></tr>
+          <tr><td><strong>Pin 14</strong></td><td>CAN Low (-)</td><td>Gen IV/V CAN- (E38 X1-27, E92 X1-40)</td></tr>
+          <tr><td><strong>Pin 16</strong></td><td>12V+ Constant</td><td>15A Constant Battery Hot Fuse</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+
+  <details class="acc-card">
+    <summary>🔄 4L60E ➔ 4L80E Harness Repin (No Cutting)</summary>
+    <div class="acc-body">
+      <p style="margin:0 0 8px;">Convert any 1999–2007 4L60E harness to run a 4L80E in 15 minutes:</p>
+      <table class="clean-table">
+        <thead><tr><th>Wire</th><th>At 20-Pin Round Plug</th><th>At 99–07 PCM</th></tr></thead>
+        <tbody>
+          <tr><td><strong>WHT (687)</strong></td><td>Pull from <strong>Pin S</strong> (route to front ISS)</td><td>Move <strong>C1-79 ➔ C2-22</strong> (ISS High)</td></tr>
+          <tr><td><strong>TAN/BLK (422)</strong></td><td>Pull from <strong>Pin T</strong> (route to front ISS)</td><td>Move <strong>C2-42 ➔ C2-23</strong> (ISS Low)</td></tr>
+          <tr><td><strong>BRN (418)</strong></td><td>Move from <strong>Pin U ➔ Pin S</strong></td><td>Leave at <strong>C2 Pin 2</strong> (TCC PWM)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+
+  <details class="acc-card">
+    <summary>🦶 03–07 Blue/Green Cable Throttle (DBC) Checker</summary>
+    <div class="acc-body">
+      <p style="margin:0 0 8px;">Most 03–07 P59 truck PCMs lack the internal <strong>B67U1 IAC stepper chip</strong> needed for a cable throttle body. Enter your 8-digit Service #:</p>
+      <input type="text" id="mServInput" class="search-input" style="padding-left:12px;" placeholder="Enter 8-digit Service # (e.g. 12576106, 12586242)" oninput="checkMobileDbc()">
+      <div id="mDbcResult" style="margin-top:10px;font-size:12.5px;color:var(--cyan);font-weight:600;">DBC Capable Service #s: 09354896, 12200411, 12576106, 12581565, 12586243, 12589462, 12602801</div>
+    </div>
+  </details>
+</section>
+
+<!-- ======================================================================= -->
+<!-- TAB 4: SENSOR, PEDAL & INJECTOR REFERENCE                               -->
+<!-- ======================================================================= -->
+<section id="view-vault" class="app-view">
+  <details class="acc-card" open>
+    <summary>🧲 24x (Gen III) vs 58x (Gen IV / V) Quick ID</summary>
+    <div class="acc-body">
+      <table class="clean-table">
+        <thead><tr><th>Feature</th><th>Gen III (24x)</th><th>Gen IV / V (58x)</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Crank Sensor</strong></td><td><strong>BLACK</strong> (Rear Pass. Block)</td><td><strong>GRAY</strong> (Rear Pass. Block)</td></tr>
+          <tr><td><strong>Cam Sensor</strong></td><td><strong>1x</strong> Rear Top of Block</td><td><strong>4x</strong> Front Timing Cover</td></tr>
+          <tr><td><strong>Knock Sensors</strong></td><td>1-Wire in Lifter Valley</td><td>2-Wire on Block Sides</td></tr>
+          <tr><td><strong>ECMs Used</strong></td><td>P01 (0411), P59, E40</td><td>E38, E67, E92 (Gen V)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+
+  <details class="acc-card">
+    <summary>🦶 DBW Gas Pedal Pinout (Truck vs Camaro vs Gen V)</summary>
+    <div class="acc-body">
+      <p style="margin:0 0 8px;color:var(--amber);font-weight:600;">⚠️ Truck and Camaro E38 pedals swap Pins D and F!</p>
+      <table class="clean-table">
+        <thead><tr><th>Pedal</th><th>07–13 Truck</th><th>10–15 Camaro</th><th>14–18 Gen V</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Pin A</strong></td><td>X1-23 (Low Ref)</td><td>X1-23 (Low Ref)</td><td>X1-53 (Low Ref)</td></tr>
+          <tr><td><strong>Pin B</strong></td><td>X1-32 (Sig 2)</td><td>X1-32 (Sig 2)</td><td>X1-34 (Sig 2)</td></tr>
+          <tr><td><strong>Pin C</strong></td><td>X1-36 (5V Ref)</td><td>X1-36 (5V Ref)</td><td>X1-33 (5V Ref)</td></tr>
+          <tr><td><strong>Pin D</strong></td><td><strong>X1-56 (5V)</strong></td><td><strong>X1-30 (Low)</strong></td><td>X1-14 (5V Ref)</td></tr>
+          <tr><td><strong>Pin E</strong></td><td>X1-29 (Sig 1)</td><td>X1-29 (Sig 1)</td><td>X1-15 (Sig 1)</td></tr>
+          <tr><td><strong>Pin F</strong></td><td><strong>X1-30 (Low)</strong></td><td><strong>X1-56 (5V)</strong></td><td>X1-30 (Low Ref)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+
+  <details class="acc-card">
+    <summary>🌡️ O2 Sensor Ground Types (P0134 / P0154 Fix)</summary>
+    <div class="acc-body">
+      <p style="margin:0 0 8px;"><strong>Case-Grounded (Flat Black 4-Pin Plug):</strong> Grounds TAN wire through exhaust threads. Runs straight to PCM C1-25 / C1-26.</p>
+      <p style="margin:0;"><strong>Isolated-Ground (Square White 4-Pin Plug):</strong> Sensor body is isolated! TAN low-reference wires MUST connect to <strong>PCM C1 Blue Pin 63</strong> (or engine ground) or O2s will read dead.</p>
+    </div>
+  </details>
+
+  <details class="acc-card">
+    <summary>⛽ GM Fuel Injector Flow Rates (@ 58 PSI)</summary>
+    <div class="acc-body">
+      <table class="clean-table">
+        <thead><tr><th>Part #</th><th>Application</th><th>Flow Rate</th></tr></thead>
+        <tbody>
+          <tr><td><strong>25317669</strong></td><td>1999 4.8L / 5.3L</td><td>21.8 lb/hr (2.74 g/s)</td></tr>
+          <tr><td><strong>25317670</strong></td><td>99–00 6.0L &amp; 2000 4.8/5.3</td><td>24.8 lb/hr (3.13 g/s)</td></tr>
+          <tr><td><strong>25317628</strong></td><td>2001–2007 4.8 / 5.3 / 6.0</td><td>25.2 lb/hr (3.18 g/s)</td></tr>
+          <tr><td><strong>25326903</strong></td><td>02–06 L59 5.3L Flex Fuel</td><td>33.0 lb/hr @ 50 PSI</td></tr>
+          <tr><td><strong>12555894</strong></td><td>1999–2000 LS1 5.7L</td><td>27.3 lb/hr (3.44 g/s)</td></tr>
+          <tr><td><strong>12561462</strong></td><td>2001–2004 LS1 / LS6</td><td>30.0 lb/hr (3.78 g/s)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+</section>
+
+<!-- ======================================================================= -->
+<!-- TAB 5: NO-START DIAGNOSTICS & QUICK COMPARE                             -->
+<!-- ======================================================================= -->
+<section id="view-diagnose" class="app-view">
+  <details class="acc-card" open>
+    <summary>🚨 Starts for 2 Seconds &amp; Immediately Dies</summary>
+    <div class="acc-body">
+      <strong>Cause &amp; Fix:</strong> 99% of the time <strong>VATS (Vehicle Anti-Theft)</strong> is still enabled in the tune (cuts injector pulse after 2 sec). Also try unplugging the MAF sensor — if it idles unplugged, your MAF calibration doesn't match the sensor or there is a big post-MAF intake leak.
+    </div>
+  </details>
+
+  <details class="acc-card">
+    <summary>🚨 Cranks Strong, Zero Spark &amp; Zero Pop</summary>
+    <div class="acc-body">
+      <strong>Cause &amp; Fix:</strong> Your Pink Ignition 12V+ wire is dropping to 0V while the key is held in <strong>START (CRANK)</strong>! Measure voltage on PCM C1-19 / X1-19 / X1-51 and coil Pink wires while cranking — move your relay trigger to a true Run+Crank ignition terminal.
+    </div>
+  </details>
+
+  <details class="acc-card">
+    <summary>🚨 Tachometer Dead or Reads Half RPM</summary>
+    <div class="acc-body">
+      <strong>Cause &amp; Fix:</strong> Solder a <strong>1kΩ (1,000 Ohm) pull-up resistor</strong> between the Tach output wire (C2-10 / X1-48) and 12V+ Key-On. Factory LS PCMs output a 4-cylinder pulse — set your tach to <strong>4-Cyl mode</strong>!
+    </div>
+  </details>
+
+  <details class="acc-card">
+    <summary>🚨 4L60E / 4L80E Stuck in 3rd Gear or No Lockup</summary>
+    <div class="acc-body">
+      <strong>Cause &amp; Fix:</strong> Feed <strong>Pin E (Pink wire)</strong> on the 20-pin round trans plug with 15A Switched 12V+! For Torque Converter Lockup on Gen III, <strong>C1 Blue Pin 33 (Purple)</strong> needs 12V+ when OFF the brakes and 0V when pressing the brakes.
+    </div>
+  </details>
+
+  <details class="acc-card">
+    <summary>⚖️ Cross-ECM Essential Pin Cheat Sheet</summary>
+    <div class="acc-body" style="overflow-x:auto;">
+      <table class="clean-table">
+        <thead>
+          <tr><th>Circuit</th><th>99–07 P01/P59</th><th>07–15 E38</th><th>05–06 E40</th><th>07–15 E67</th><th>14–18 E92</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>12V B+</strong></td><td>C1-20, 57</td><td>X1-20</td><td>C1-20</td><td>C1-20</td><td>X1-52</td></tr>
+          <tr><td><strong>12V Ign</strong></td><td>C1-19, 75</td><td>X1-19, 47</td><td>C1-14, 19</td><td>C1-19, C2-13</td><td>X1-51, 62, 67, 73</td></tr>
+          <tr><td><strong>Fuel Pump</strong></td><td>C2-9</td><td>X1-50</td><td>C1-45</td><td>C1-4</td><td>X1-44</td></tr>
+          <tr><td><strong>MIL Lamp</strong></td><td>C2-46</td><td>X1-67</td><td>C1-4</td><td>C1-1</td><td>X1-46</td></tr>
+          <tr><td><strong>Tach Out</strong></td><td>C2-10</td><td>X1-48</td><td>C1-48</td><td>C1-25</td><td>X2-40</td></tr>
+          <tr><td><strong>VSS Out</strong></td><td>C2-50</td><td>X1-57</td><td>C1-21</td><td>C3-42</td><td>X2-8</td></tr>
+          <tr><td><strong>OBD2</strong></td><td>C1-58 (Pin 2)</td><td>X1-28/27</td><td>C1-1/2</td><td>C3-53/33</td><td>X1-39/40</td></tr>
+          <tr><td><strong>Fans L/H</strong></td><td>C1-42 / C2-33</td><td>X1-58 / 17</td><td>C1-36 / 56</td><td>C3-49 / C1-54</td><td>X1-59</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+</section>
+
+<!-- ======================================================================= -->
+<!-- SLIDE-UP SHEET 1: PIN DETAIL INSPECTOR                                  -->
+<!-- ======================================================================= -->
+<div class="sheet-backdrop" id="pinSheetBackdrop" onclick="closePinSheet()">
+  <div class="bottom-sheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <div id="pinSheetContent"></div>
+  </div>
+</div>
+
+<!-- ======================================================================= -->
+<!-- SLIDE-UP SHEET 2: CONTROLLER FAMILY PICKER                              -->
+<!-- ======================================================================= -->
+<div class="sheet-backdrop" id="ecmSheetBackdrop" onclick="closeEcmSheet()">
+  <div class="bottom-sheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <h3 style="margin:0 0 12px;font-size:17px;font-weight:800;">Select ECM / PCM / Controller</h3>
+    <div class="card-box" id="ecmSheetList"></div>
+  </div>
+</div>
+
+<!-- ======================================================================= -->
+<!-- SLIDE-UP SHEET 3: ACTIVE CONTROLLER SPECS                               -->
+<!-- ======================================================================= -->
+<div class="sheet-backdrop" id="specsSheetBackdrop" onclick="closeSpecsSheet()">
+  <div class="bottom-sheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <div id="specsSheetContent"></div>
+  </div>
+</div>
+
+<!-- ======================================================================= -->
+<!-- BOTTOM NAVIGATION BAR                                                   -->
+<!-- ======================================================================= -->
+<nav class="bottom-tabbar">
+  <button class="tabbar-item active" id="tabbtn-pinouts" onclick="switchMobileTab('pinouts', 'LS Pinout')">
+    <svg viewBox="0 0 24 24"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
+    <span>Pinouts</span>
+  </button>
+  <button class="tabbar-item" id="tabbtn-build" onclick="switchMobileTab('build', 'My Swap Setup')">
+    <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+    <span>My Swap</span>
+  </button>
+  <button class="tabbar-item" id="tabbtn-wizards" onclick="switchMobileTab('wizards', 'Wiring Guides')">
+    <svg viewBox="0 0 24 24"><path d="M6.99 11L3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3H10v2h7.01v3L21 9z"/></svg>
+    <span>Guides</span>
+  </button>
+  <button class="tabbar-item" id="tabbtn-vault" onclick="switchMobileTab('vault', 'Tech Reference')">
+    <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg>
+    <span>Reference</span>
+  </button>
+  <button class="tabbar-item" id="tabbtn-diagnose" onclick="switchMobileTab('diagnose', 'No-Start Fix')">
+    <svg viewBox="0 0 24 24"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>
+    <span>Fix No-Start</span>
+  </button>
+</nav>
+
+<script>
+const MASTER_DATA = __MASTER_DATA_JSON__;
+
+__SHARED_ENGINE_JS__
+
+let curEcmIdx = 0;
+let curConnIdx = 0;
+let curVerdictFilter = "ALL";
+let curSelectedPin = null;
+let curBankMode = "full";
+let showEmptyPins = false;
+let progressState = {};
+
+try {
+  const saved = localStorage.getItem("ls_swap_pinout_progress_v1");
+  if (saved) progressState = JSON.parse(saved);
+} catch (e) {}
+
+function getMobileCfg() {
+  return {
+    trans: document.getElementById("mCfgTrans").value,
+    throttle: document.getElementById("mCfgThrottle").value,
+    fans: document.getElementById("mCfgFans").value,
+    ac: document.getElementById("mCfgAC").value,
+    emissions: document.getElementById("mCfgEmissions").value
+  };
+}
+
+function loadSavedSetup() {
+  try {
+    const raw = localStorage.getItem("ls_swap_config_v2");
+    if (!raw) return;
+    const cfg = JSON.parse(raw);
+    if (cfg.trans) document.getElementById("mCfgTrans").value = cfg.trans;
+    if (cfg.throttle) document.getElementById("mCfgThrottle").value = cfg.throttle;
+    if (cfg.fans) document.getElementById("mCfgFans").value = cfg.fans;
+    if (cfg.ac) document.getElementById("mCfgAC").value = cfg.ac;
+    if (cfg.emissions) document.getElementById("mCfgEmissions").value = cfg.emissions;
+    if (typeof cfg.ecmIdx === "number" && cfg.ecmIdx >= 0 && cfg.ecmIdx < MASTER_DATA.ecms.length) {
+      curEcmIdx = cfg.ecmIdx;
+    }
+  } catch (e) {}
+}
+
+function saveSetup() {
+  try {
+    const cfg = getMobileCfg();
+    cfg.ecmIdx = curEcmIdx;
+    localStorage.setItem("ls_swap_config_v2", JSON.stringify(cfg));
+  } catch (e) {}
+}
+
+function triggerHaptic() {
+  try {
+    if (window.AndroidBridge && window.AndroidBridge.hapticTap) {
+      window.AndroidBridge.hapticTap();
+    } else if (navigator.vibrate) {
+      navigator.vibrate(8);
+    }
+  } catch (e) {}
+}
+
+function saveProgress() {
+  try {
+    localStorage.setItem("ls_swap_pinout_progress_v1", JSON.stringify(progressState));
+  } catch (e) {}
+  updateProgressSummary();
+}
+
+function getPinKey(ecmId, connId, pin, idx) {
+  return `${ecmId}__${connId}__${pin}__${idx}`;
+}
+
+function updateSetupBanner() {
+  const cfg = getMobileCfg();
+  const transNames = { "4l60e": "4L60E", "4l80e": "4L80E Repin", "6l80e": "6L80E", "manual": "Manual Trans" };
+  const throtNames = { "auto": "Auto Throttle", "dbc": "Cable (DBC)", "dbw": "Pedal (DBW)" };
+  const fanNames = { "pcm": "Elec Fans", "mech": "Mech Fan" };
+  const parts = [transNames[cfg.trans] || "4L60E", throtNames[cfg.throttle] || "Auto", fanNames[cfg.fans] || "Elec Fans"];
+  if (cfg.ac === "keep") parts.push("PCM A/C");
+  if (cfg.emissions === "emissions") parts.push("Emissions");
+  document.getElementById("setupSummaryText").innerHTML = `<strong>My Setup:</strong> ${parts.join(" • ")}`;
+}
+
+function initMobileApp() {
+  loadSavedSetup();
+  updateSetupBanner();
+  renderEcmSheetList();
+  selectMobileEcm(curEcmIdx, true);
+}
+
+function switchMobileTab(tabName, titleText) {
+  triggerHaptic();
+  document.querySelectorAll(".app-view").forEach(v => v.classList.remove("active"));
+  document.querySelectorAll(".tabbar-item").forEach(b => b.classList.remove("active"));
+  document.getElementById("view-" + tabName).classList.add("active");
+  document.getElementById("tabbtn-" + tabName).classList.add("active");
+  document.getElementById("navTitle").textContent = titleText;
+  document.getElementById("pinoutSearchWrap").style.display = (tabName === "pinouts") ? "flex" : "none";
+  if (tabName === "build") updateProgressSummary();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function openEcmSheet() {
+  triggerHaptic();
+  renderEcmSheetList();
+  document.getElementById("ecmSheetBackdrop").classList.add("open");
+}
+function closeEcmSheet() {
+  document.getElementById("ecmSheetBackdrop").classList.remove("open");
+}
+
+function openSpecsSheet() {
+  triggerHaptic();
+  const ecm = MASTER_DATA.ecms[curEcmIdx];
+  document.getElementById("specsSheetContent").innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px;">
+      <h3 style="margin:0;font-size:17px;font-weight:800;line-height:1.3;">${ecm.name}</h3>
+      <span class="action-tag at-external" style="font-size:12px;padding:4px 9px;">${ecm.pcmCode}</span>
+    </div>
+    <p style="margin:0 0 12px;font-size:13.5px;color:var(--text-2);">${ecm.summary}</p>
+    <div class="card-box" style="background:var(--surface-2);">
+      <div class="setting-row"><span class="setting-sub" style="margin:0;">Engines</span><strong style="font-size:13px;text-align:right;">${ecm.engines}</strong></div>
+      <div class="setting-row"><span class="setting-sub" style="margin:0;">Reluctor</span><strong style="font-size:13px;text-align:right;">${ecm.reluctor}</strong></div>
+      <div class="setting-row"><span class="setting-sub" style="margin:0;">Connectors</span><strong style="font-size:13px;text-align:right;">${ecm.connectorColors}</strong></div>
+      <div class="setting-row"><span class="setting-sub" style="margin:0;">Service #s</span><strong style="font-size:12.5px;text-align:right;">${ecm.serviceNumbers.join(", ")}</strong></div>
+      <div class="setting-row"><span class="setting-sub" style="margin:0;">Throttle</span><strong style="font-size:12.5px;text-align:right;">${ecm.throttleSupport}</strong></div>
+    </div>
+    <button class="btn-block btn-subtle" onclick="closeSpecsSheet()">Done</button>
+  `;
+  document.getElementById("specsSheetBackdrop").classList.add("open");
+}
+function closeSpecsSheet() {
+  document.getElementById("specsSheetBackdrop").classList.remove("open");
+}
+
+function renderEcmSheetList() {
+  const list = document.getElementById("ecmSheetList");
+  list.innerHTML = MASTER_DATA.ecms.map((e, idx) => `
+    <div class="pin-row ${idx === curEcmIdx ? 'row-selected' : ''}" onclick="selectMobileEcm(${idx}); closeEcmSheet();">
+      <div class="pin-body">
+        <div class="pin-title">${e.shortName}</div>
+        <div class="pin-meta">${e.connectorColors} • ${e.engines}</div>
+      </div>
+      <span class="action-tag at-external">${e.generation}</span>
+    </div>
+  `).join("");
+}
+
+function selectMobileEcm(idx, skipHaptic) {
+  if (!skipHaptic) triggerHaptic();
+  curEcmIdx = idx;
+  curConnIdx = 0;
+  curSelectedPin = null;
+  curBankMode = "full";
+  saveSetup();
+
+  const ecm = MASTER_DATA.ecms[curEcmIdx];
+  document.getElementById("activeEcmShort").textContent = ecm.shortName;
+  renderConnPills();
+  renderMobilePins();
+  updateProgressSummary();
+}
+
+function renderConnPills() {
+  const ecm = MASTER_DATA.ecms[curEcmIdx];
+  document.getElementById("connPillsBar").innerHTML = ecm.connectors.map((c, idx) => `
+    <button class="conn-pill ${idx === curConnIdx ? 'active' : ''}" onclick="selectMobileConn(${idx})">
+      <span class="dot-ind dot-${c.color}"></span>
+      ${c.name}
+    </button>
+  `).join("");
+}
+
+function selectMobileConn(idx) {
+  triggerHaptic();
+  curConnIdx = idx;
+  curSelectedPin = null;
+  curBankMode = "full";
+  renderConnPills();
+  renderMobilePins();
+}
+
+function setBankMode(mode) {
+  triggerHaptic();
+  curBankMode = mode;
+  ["full", "left", "right"].forEach(m => {
+    const el = document.getElementById("bankbtn-" + m);
+    if (el) el.classList.toggle("active", m === mode);
+  });
+  renderMobilePins();
+}
+
+function toggleVisualizer() {
+  const body = document.getElementById("visualizerBody");
+  const btn = document.getElementById("collapseVisBtn");
+  const hidden = body.style.display === "none";
+  body.style.display = hidden ? "block" : "none";
+  btn.textContent = hidden ? "Hide Diagram" : "Show Diagram";
+}
+
+function setVerdictFilter(val) {
+  triggerHaptic();
+  curVerdictFilter = (curVerdictFilter === val && val !== "ALL") ? "ALL" : val;
+  renderMobilePins();
+}
+
+function toggleShowEmpty() {
+  triggerHaptic();
+  showEmptyPins = !showEmptyPins;
+  const btn = document.getElementById("showEmptyBtn");
+  btn.classList.toggle("on", showEmptyPins);
+  btn.textContent = showEmptyPins ? "Showing Empty" : "Show Empty";
+  renderMobilePins();
+}
+
+function onSearchInput() {
+  const val = document.getElementById("mobileSearch").value;
+  document.getElementById("searchClearBtn").style.display = val ? "flex" : "none";
+  renderMobilePins();
+}
+
+function clearSearch() {
+  document.getElementById("mobileSearch").value = "";
+  document.getElementById("searchClearBtn").style.display = "none";
+  renderMobilePins();
+}
+
+function onBuildConfigChange() {
+  triggerHaptic();
+  saveSetup();
+  updateSetupBanner();
+  renderMobilePins();
+  updateProgressSummary();
+}
+
+function renderMobilePins() {
+  const ecm = MASTER_DATA.ecms[curEcmIdx];
+  const conn = ecm.connectors[curConnIdx];
+  const cfg = getMobileCfg();
+  const q = document.getElementById("mobileSearch").value.trim().toLowerCase();
+
+  const built = buildConnectorSVG(ecm, conn, {
+    cfg,
+    progressState,
+    getPinKey,
+    selectedPin: curSelectedPin,
+    activeFilter: curVerdictFilter,
+    bankMode: curBankMode,
+    onClickFnName: "openPinSheet"
+  });
+
+  document.getElementById("visConnTitle").textContent = conn.name;
+  document.getElementById("visConnSub").textContent = built.meta.label;
+
+  const bankBar = document.getElementById("bankZoomBar");
+  if (built.meta.hasBanks) {
+    bankBar.style.display = "flex";
+    ["full", "left", "right"].forEach(m => {
+      document.getElementById("bankbtn-" + m).classList.toggle("active", m === curBankMode);
+    });
+    document.getElementById("tapHintText").textContent = curBankMode === "full"
+      ? "Tap any pin cavity • Use Left / Right zoom above for larger numbers"
+      : "Tap any pin cavity to inspect wire color & instructions";
+  } else {
+    bankBar.style.display = "none";
+    document.getElementById("tapHintText").textContent = "Tap any cavity above to see wire color & what to do";
+  }
+
+  document.getElementById("svgStage").innerHTML = built.svg;
+
+  // Render clean plain-English filter chips
+  const c = built.counts;
+  const chips = [
+    { id: "ALL", label: "All", dot: "" },
+    { id: "external", label: `Hook Up (${c.external})`, dot: "#22D3EE" },
+    { id: "keep", label: `Keep (${c.keep})`, dot: "#34D399" }
+  ];
+  if (c.repin > 0) chips.push({ id: "repin", label: `Move Pin (${c.repin})`, dot: "#FB7185" });
+  if (c.trans > 0) chips.push({ id: "trans", label: `Auto Trans (${c.trans})`, dot: "#C084FC" });
+  if (c.remove > 0) chips.push({ id: "remove", label: `Remove (${c.remove})`, dot: "#FBBF24" });
+
+  document.getElementById("verdictChipBar").innerHTML = chips.map(ch => `
+    <button class="f-chip ${curVerdictFilter === ch.id ? 'active' : ''}" onclick="setVerdictFilter('${ch.id}')">
+      ${ch.dot ? `<span class="f-dot" style="background:${ch.dot};"></span>` : ""}
+      ${ch.label}
+    </button>
+  `).join("");
+
+  // Render Scannable Circuit List
+  let listHtml = "";
+  let countShown = 0;
+  conn.pins.forEach((p, idx) => {
+    const v = computeVerdictWithConfig(p, ecm, conn, cfg);
+    if (!showEmptyPins && !q && curVerdictFilter === "ALL" && v.status === "empty") return;
+    if (curVerdictFilter !== "ALL" && v.status !== curVerdictFilter) return;
+    if (q) {
+      const hay = `pin ${p.pin} ${p.wire} ${p.circuit} ${p.function} ${p.notes} ${p.system}`.toLowerCase();
+      if (!hay.includes(q)) return;
+    }
+
+    countShown++;
+    const key = getPinKey(ecm.id, conn.id, p.pin, idx);
+    const st = progressState[key] || {};
+    const sw = getWireSwatchStyle(p.wire);
+    const isSel = String(curSelectedPin) === String(p.pin);
+
+    listHtml += `
+      <div class="pin-row ${st.done ? 'row-done' : ''} ${isSel ? 'row-selected' : ''}" onclick="openPinSheet('${p.pin}', ${idx})">
+        <div class="pin-badge st-${v.status}">
+          <small>PIN</small>${p.pin}
+        </div>
+        <div class="pin-body">
+          <div class="pin-title">${p.function}</div>
+          <div class="pin-meta">
+            <span class="wire-chip"><span class="wire-swatch" style="${sw}"></span>${p.wire}</span>
+            ${p.circuit && p.circuit !== "--" ? `<span>Ckt ${p.circuit}</span>` : ""}
+            <span class="action-tag at-${v.status}">${v.shortLabel}</span>
+          </div>
+          ${st.note ? `<div style="font-size:11.5px;color:var(--cyan);margin-top:4px;">📝 ${st.note}</div>` : ""}
+        </div>
+        <div class="done-btn ${st.done ? 'checked' : ''}" onclick="event.stopPropagation(); toggleMobilePinDone('${key}')">✓</div>
+      </div>
+    `;
+  });
+
+  document.getElementById("pinListCountLabel").textContent = `${conn.id} Circuits (${countShown})`;
+  document.getElementById("mobilePinList").innerHTML = listHtml || `
+    <div style="padding:26px 16px;text-align:center;color:var(--text-muted);font-size:13.5px;">
+      No circuits match your current filter.
+    </div>
+  `;
+}
+
+function toggleMobilePinDone(key) {
+  triggerHaptic();
+  if (!progressState[key]) progressState[key] = {};
+  progressState[key].done = !progressState[key].done;
+  saveProgress();
+  renderMobilePins();
+  updateProgressSummary();
+}
+
+function openPinSheet(pinVal, specificIdx) {
+  triggerHaptic();
+  curSelectedPin = String(pinVal);
+  const ecm = MASTER_DATA.ecms[curEcmIdx];
+  const conn = ecm.connectors[curConnIdx];
+  const cfg = getMobileCfg();
+
+  // Auto-pan bank zoom if user selected a pin in the opposite bank
+  if (conn.layoutType === "pcm_80" && curBankMode !== "full") {
+    const n = parseInt(pinVal, 10);
+    const inLeft = (n >= 1 && n <= 20) || (n >= 41 && n <= 60);
+    if (curBankMode === "left" && !inLeft) curBankMode = "right";
+    if (curBankMode === "right" && inLeft) curBankMode = "left";
+  }
+
+  // Gather matching entries (supports multi-option RPO pins AND unpopulated shell cavities)
+  let entries = [];
+  if (specificIdx !== undefined && conn.pins[specificIdx]) {
+    entries = [{ p: conn.pins[specificIdx], idx: specificIdx }];
+  } else {
+    conn.pins.forEach((p, i) => {
+      if (String(p.pin) === String(pinVal)) entries.push({ p, idx: i });
+    });
+  }
+
+  if (entries.length === 0) {
+    document.getElementById("pinSheetContent").innerHTML = `
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+        <div class="pin-badge st-empty" style="min-width:50px;height:50px;font-size:17px;">
+          <small>${conn.id}</small>${pinVal}
+        </div>
+        <div>
+          <div style="font-size:17px;font-weight:800;">Factory Empty Cavity</div>
+          <div style="font-size:12.5px;color:var(--text-muted);">Unpopulated / Sealed Slot</div>
+        </div>
+      </div>
+      <div class="card-box card-pad" style="background:var(--surface-2);font-size:13.5px;color:var(--text-2);">
+        This cavity exists in the physical ${conn.name} shell from the factory, but carries no wire on this application. Leave it sealed or empty.
+      </div>
+      <button class="btn-block btn-subtle" onclick="closePinSheet()">Close</button>
+    `;
+    document.getElementById("pinSheetBackdrop").classList.add("open");
+    renderMobilePins();
+    return;
+  }
+
+  const primary = entries[0];
+  const v = computeVerdictWithConfig(primary.p, ecm, conn, cfg);
+  const key = getPinKey(ecm.id, conn.id, primary.p.pin, primary.idx);
+  const st = progressState[key] || {};
+
+  const variantsHtml = entries.map(({ p }) => {
+    const pv = computeVerdictWithConfig(p, ecm, conn, cfg);
+    const sw = getWireSwatchStyle(p.wire);
+    return `
+      <div class="card-box" style="background:var(--surface-2);margin-bottom:10px;">
+        <div class="setting-row">
+          <span class="setting-sub" style="margin:0;">Circuit</span>
+          <strong style="font-size:13.5px;text-align:right;">${p.function}</strong>
+        </div>
+        <div class="setting-row">
+          <span class="setting-sub" style="margin:0;">Wire &amp; Ckt #</span>
+          <span class="wire-chip" style="font-size:12.5px;padding:3px 9px;">
+            <span class="wire-swatch" style="${sw}"></span> ${p.wire} ${p.circuit && p.circuit !== '--' ? `• #${p.circuit}` : ''}
+          </span>
+        </div>
+        <div class="setting-row" style="display:block;">
+          <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;font-weight:700;margin-bottom:4px;">What To Do</div>
+          <div style="font-size:13.5px;color:var(--text);line-height:1.48;">
+            ${pv.plainAction ? `<strong style="color:var(--rose);display:block;margin-bottom:4px;">${pv.plainAction}</strong>` : ""}
+            ${p.notes}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  document.getElementById("pinSheetContent").innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;">
+      <div style="display:flex;align-items:center;gap:11px;min-width:0;">
+        <div class="pin-badge st-${v.status}" style="min-width:50px;height:50px;font-size:17px;">
+          <small>${conn.id}</small>${primary.p.pin}
+        </div>
+        <div style="min-width:0;">
+          <div style="font-size:16.5px;font-weight:800;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${primary.p.function}</div>
+          <div style="font-size:12px;color:var(--text-muted);">${primary.p.system}${entries.length > 1 ? ` • ${entries.length} Variants` : ''}</div>
+        </div>
+      </div>
+      <span class="action-tag at-${v.status}" style="font-size:12px;padding:5px 9px;">${v.shortLabel}</span>
+    </div>
+
+    ${variantsHtml}
+
+    <input type="text" class="search-input" style="padding:10px 13px;margin-bottom:4px;background:var(--surface-2);"
+           placeholder="✏️ Add custom note for ${conn.id} Pin ${primary.p.pin}..."
+           value="${(st.note || '').replace(/"/g, '&quot;')}"
+           oninput="saveSheetNote('${key}', this.value)">
+
+    <button class="btn-block ${st.done ? 'btn-subtle' : 'btn-green'}"
+            onclick="toggleMobilePinDone('${key}'); closePinSheet();">
+      ${st.done ? '↩️ Mark as Unfinished' : '✓ Mark Wire Completed'}
+    </button>
+  `;
+
+  document.getElementById("pinSheetBackdrop").classList.add("open");
+  renderMobilePins();
+}
+
+function saveSheetNote(key, val) {
+  if (!progressState[key]) progressState[key] = {};
+  progressState[key].note = val;
+  saveProgress();
+}
+
+function closePinSheet() {
+  document.getElementById("pinSheetBackdrop").classList.remove("open");
+}
+
+function updateProgressSummary() {
+  const ecm = MASTER_DATA.ecms[curEcmIdx];
+  const cfg = getMobileCfg();
+  let activeTotal = 0;
+  let activeDone = 0;
+
+  ecm.connectors.forEach(conn => {
+    conn.pins.forEach((p, idx) => {
+      const v = computeVerdictWithConfig(p, ecm, conn, cfg);
+      if (v.status !== "empty") {
+        activeTotal++;
+        const k = getPinKey(ecm.id, conn.id, p.pin, idx);
+        if (progressState[k] && progressState[k].done) activeDone++;
+      }
+    });
+  });
+
+  const pct = activeTotal > 0 ? Math.round((activeDone / activeTotal) * 100) : 0;
+  const elTitle = document.getElementById("progressStatsTitle");
+  const elPct = document.getElementById("progressPctBadge");
+  const elFill = document.getElementById("progressBarFill");
+  const elSub = document.getElementById("progressSubText");
+
+  if (elTitle) elTitle.textContent = `${activeDone} of ${activeTotal} Wires Done`;
+  if (elPct) elPct.textContent = `${pct}%`;
+  if (elFill) elFill.style.width = `${pct}%`;
+  if (elSub) elSub.textContent = `Tracking active circuits for ${ecm.shortName}.`;
+}
+
+function resetCurrentProgress() {
+  if (confirm("Reset all checked wires and custom notes?")) {
+    progressState = {};
+    saveProgress();
+    renderMobilePins();
+  }
+}
+
+function shareOrExportBuild() {
+  triggerHaptic();
+  const payload = JSON.stringify({ config: getMobileCfg(), progress: progressState }, null, 2);
+  if (window.AndroidBridge && window.AndroidBridge.shareText) {
+    window.AndroidBridge.shareText("LS Swap Harness Progress", payload);
+  } else {
+    const blob = new Blob([payload], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "ls_swap_mobile_progress.json";
+    a.click();
+  }
+}
+
+function checkMobileDbc() {
+  const v = document.getElementById("mServInput").value.trim();
+  const box = document.getElementById("mDbcResult");
+  const yes = ["09354896", "12200411", "12576106", "12581565", "12586243", "12589462", "12602801"];
+  const no = ["12582605", "12586242", "12589463", "12602802"];
+  if (!v) {
+    box.style.color = "var(--cyan)";
+    box.textContent = "DBC Capable Service #s: 09354896, 12200411, 12576106, 12581565, 12586243, 12589462, 12602801";
+  } else if (yes.includes(v)) {
+    box.style.color = "var(--green)";
+    box.textContent = `✅ Service # ${v} HAS the B67U1 IAC stepper chip and supports Cable Throttle (DBC) + 12V A/C Request!`;
+  } else if (no.includes(v)) {
+    box.style.color = "var(--rose)";
+    box.textContent = `❌ Service # ${v} is missing the IAC stepper driver chip. Electronic Pedal (DBW) ONLY!`;
+  } else {
+    box.style.color = "var(--amber)";
+    box.textContent = `⚠️ Unlisted Service #. Open PCM cover (4 Torx screws) and check board location B67U1 for IAC stepper pins.`;
+  }
+}
+
+window.handleAndroidBack = function() {
+  if (document.getElementById("pinSheetBackdrop").classList.contains("open")) {
+    closePinSheet();
+    return true;
+  }
+  if (document.getElementById("ecmSheetBackdrop").classList.contains("open")) {
+    closeEcmSheet();
+    return true;
+  }
+  if (document.getElementById("specsSheetBackdrop").classList.contains("open")) {
+    closeSpecsSheet();
+    return true;
+  }
+  if (!document.getElementById("view-pinouts").classList.contains("active")) {
+    switchMobileTab("pinouts", "LS Pinout");
+    return true;
+  }
+  return false;
+};
+
+window.addEventListener("DOMContentLoaded", initMobileApp);
+</script>
+</body>
+</html>
