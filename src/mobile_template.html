@@ -798,7 +798,7 @@
     <div class="nav-row">
       <div style="display:flex;align-items:center;gap:6px;">
         <h1 class="app-title" id="navTitle">LS Pinout</h1>
-        <span style="font-size:10px;font-weight:800;padding:2px 5px;border-radius:5px;background:rgba(56,189,248,0.16);color:#38BDF8;">v2.1</span>
+        <span style="font-size:10px;font-weight:800;padding:2px 5px;border-radius:5px;background:rgba(56,189,248,0.16);color:#38BDF8;">v2.2</span>
       </div>
       <div class="nav-right-controls">
         <button class="ecm-selector-btn" onclick="openEcmSheet()">
@@ -981,10 +981,10 @@
       <table class="clean-table">
         <thead><tr><th>OBD2 Pin</th><th>Function</th><th>Connects To</th></tr></thead>
         <tbody>
-          <tr><td><strong>Pin 2</strong></td><td>Class 2 Data (PPL)</td><td>Gen III C1 Blue <strong>Pin 58</strong> (C2-58 on '98)</td></tr>
-          <tr><td><strong>Pin 4 &amp; 5</strong></td><td>Grounds (BLK)</td><td>Engine Block / Chassis Ground</td></tr>
-          <tr><td><strong>Pin 6</strong></td><td>CAN High (+)</td><td>Gen IV/V CAN+ (Add 120Ω to Pin 14)</td></tr>
-          <tr><td><strong>Pin 14</strong></td><td>CAN Low (-)</td><td>Gen IV/V CAN- (E38 X1-27, E92 X1-40)</td></tr>
+          <tr><td><strong>Pin 2</strong></td><td>Class 2 Data (PPL / DK GRN)</td><td>Gen III C1 Blue <strong>Pin 58</strong> (C2-58 on '98)</td></tr>
+          <tr><td><strong>Pin 4 &amp; 5</strong></td><td>Grounds (BLK / BLK-WHT)</td><td>Engine Block / Chassis Ground</td></tr>
+          <tr><td><strong>Pin 6</strong></td><td>CAN High (+) (TN / D-BU)</td><td>Gen IV/V CAN+ (Add 120Ω to Pin 14)</td></tr>
+          <tr><td><strong>Pin 14</strong></td><td>CAN Low (-) (TN/BK / WH)</td><td>Gen IV/V CAN- (E38 X1-27, E92 X1-40)</td></tr>
           <tr><td><strong>Pin 16</strong></td><td>12V+ Constant</td><td>15A Constant Battery Hot Fuse</td></tr>
         </tbody>
       </table>
@@ -994,13 +994,13 @@
   <details class="acc-card">
     <summary>🔄 4L60E ➔ 4L80E Harness Repin (No Cutting)</summary>
     <div class="acc-body">
-      <p style="margin:0 0 8px;">Convert any 1999–2007 4L60E harness to run a 4L80E in 15 minutes:</p>
+      <p style="margin:0 0 8px;">Convert any 99–07 Gen III PCM or 05–13 Gen IV T42 4L60E harness to run a 4L80E in 15 minutes:</p>
       <table class="clean-table">
-        <thead><tr><th>Wire</th><th>At 20-Pin Round Plug</th><th>At 99–07 PCM</th></tr></thead>
+        <thead><tr><th>Wire</th><th>20-Pin Trans Plug</th><th>99–07 PCM</th><th>Gen IV T42 TCM</th></tr></thead>
         <tbody>
-          <tr><td><strong>WHT (687)</strong></td><td>Pull from <strong>Pin S</strong> (route to front ISS)</td><td>Move <strong>C1-79 ➔ C2-22</strong> (ISS High)</td></tr>
-          <tr><td><strong>TAN/BLK (422)</strong></td><td>Pull from <strong>Pin T</strong> (route to front ISS)</td><td>Move <strong>C2-42 ➔ C2-23</strong> (ISS Low)</td></tr>
-          <tr><td><strong>BRN (418)</strong></td><td>Move from <strong>Pin U ➔ Pin S</strong></td><td>Leave at <strong>C2 Pin 2</strong> (TCC PWM)</td></tr>
+          <tr><td><strong>WHT (687)</strong></td><td>Pull from <strong>Pin S</strong> (to front ISS)</td><td><strong>C1-79 ➔ C2-22</strong></td><td><strong>Pin 28 ➔ Pin 3</strong></td></tr>
+          <tr><td><strong>TAN/BLK (422)</strong></td><td>Pull from <strong>Pin T</strong> (to front ISS)</td><td><strong>C2-42 ➔ C2-23</strong></td><td><strong>Pin 25 ➔ Pin 26</strong></td></tr>
+          <tr><td><strong>BRN (418)</strong></td><td>Move <strong>Pin U ➔ Pin S</strong></td><td>Keep at <strong>C2-2</strong></td><td>Keep at <strong>Pin 2</strong></td></tr>
         </tbody>
       </table>
     </div>
@@ -1056,8 +1056,9 @@
   <details class="acc-card">
     <summary>🌡️ O2 Sensor Ground Types (P0134 / P0154 Fix)</summary>
     <div class="acc-body">
-      <p style="margin:0 0 8px;"><strong>Case-Grounded (Flat Black 4-Pin Plug):</strong> Grounds TAN wire through exhaust threads. Runs straight to PCM C1-25 / C1-26.</p>
-      <p style="margin:0;"><strong>Isolated-Ground (Square White 4-Pin Plug):</strong> Sensor body is isolated! TAN low-reference wires MUST connect to <strong>PCM C1 Blue Pin 63</strong> (or engine ground) or O2s will read dead.</p>
+      <p style="margin:0 0 8px;"><strong>Case-Grounded (Flat Black 4-Pin Plug):</strong> Grounds TAN wire through exhaust threads.</p>
+      <p style="margin:0 0 8px;"><strong>Isolated-Ground on 99–02 Truck P01 (Square White Plug):</strong> Sensor body is isolated! TAN low-ref splice must connect to <strong>99–02 Truck C1 Blue Pin 63</strong> (or engine ground) or O2s read dead.</p>
+      <p style="margin:0;"><strong>03–07 P59 &amp; Gen IV/V (E38/E40/E67/E92):</strong> Each O2 sensor has its own dedicated ECM low-ref pin (and 03–07 P59 switches O2 heaters low-side on C2 Green Pins 72 &amp; 74 — <strong>never</strong> ground P59 O2 heater wires to the block!).</p>
     </div>
   </details>
 
@@ -1100,7 +1101,7 @@
   <details class="acc-card">
     <summary>🚨 Tachometer Dead or Reads Half RPM</summary>
     <div class="acc-body">
-      <strong>Cause &amp; Fix:</strong> Solder a <strong>1kΩ (1,000 Ohm) pull-up resistor</strong> between the Tach output wire (C2-10 / X1-48) and 12V+ Key-On. Factory LS PCMs output a 4-cylinder pulse — set your tach to <strong>4-Cyl mode</strong>!
+      <strong>Cause &amp; Fix:</strong> On Gen III/IV, solder a <strong>1kΩ (1,000 Ohm) pull-up resistor</strong> between the Tach output wire (C2-10 / X1-48 / C1-48 / C1-25) and 12V+ Key-On, and set your tach to <strong>4-Cyl (2 PPR) mode</strong>! <em>(Note: Gen V E92 X2-40 outputs a raw 58X crank signal and requires a tach adapter like Dakota Digital SGI-100BT unless reconfigured in OS).</em>
     </div>
   </details>
 
@@ -1123,7 +1124,7 @@
           <tr><td><strong>12V Ign</strong></td><td>C1-19, 75</td><td>X1-19, 47</td><td>C1-14, 19</td><td>C1-19, C2-13</td><td>X1-51, 62, 67, 73</td></tr>
           <tr><td><strong>Fuel Pump</strong></td><td>C2-9</td><td>X1-50</td><td>C1-45</td><td>C1-4</td><td>X1-44</td></tr>
           <tr><td><strong>MIL Lamp</strong></td><td>C2-46</td><td>X1-67</td><td>C1-4</td><td>C1-1</td><td>X1-46</td></tr>
-          <tr><td><strong>Tach Out</strong></td><td>C2-10</td><td>X1-48</td><td>C1-48</td><td>C1-25</td><td>X2-40</td></tr>
+          <tr><td><strong>Tach Out</strong></td><td>C2-10</td><td>X1-48</td><td>C1-48</td><td>C1-25</td><td>X2-40 (58X*)</td></tr>
           <tr><td><strong>VSS Out</strong></td><td>C2-50</td><td>X1-57</td><td>C1-21</td><td>C3-42</td><td>X2-8</td></tr>
           <tr><td><strong>OBD2</strong></td><td>C1-58 (Pin 2)</td><td>X1-28/27</td><td>C1-1/2</td><td>C3-53/33</td><td>X1-39/40</td></tr>
           <tr><td><strong>Fans L/H</strong></td><td>C1-42 / C2-33</td><td>X1-58 / 17</td><td>C1-36 / 56</td><td>C3-49 / C1-54</td><td>X1-59</td></tr>

@@ -83,6 +83,36 @@ function computeVerdictWithConfig(pinObj, ecm, conn, cfg) {
     }
   }
 
+  // 4L80E Repin Alerts directly on the Gen IV T42 49-Pin TCM Connector
+  if (transCfg === "4l80e" && conn.id === "T42") {
+    if (pnum === "28") {
+      return {
+        status: "repin",
+        shortLabel: "Move -> Pin 3",
+        badgeText: "4L80E: Move WHT to T42 Pin 3",
+        plainAction: "4L80E Conversion: Move this White wire (Ckt 687) out of T42 Pin 28 and insert it into T42 Pin 3 (4L80E Front ISS High)."
+      };
+    }
+    if (pnum === "25") {
+      return {
+        status: "repin",
+        shortLabel: "Move -> Pin 26",
+        badgeText: "4L80E: Move TAN/BLK to T42 Pin 26",
+        plainAction: "4L80E Conversion: Move this Tan/Black wire (Ckt 422) out of T42 Pin 25 and insert it into T42 Pin 26 (4L80E Front ISS Low)."
+      };
+    }
+    if (pnum === "3" || pnum === "26") {
+      return {
+        status: "repin",
+        shortLabel: "4L80E ISS Pin",
+        badgeText: pnum === "3" ? "4L80E ISS High (from Pin 28)" : "4L80E ISS Low (from Pin 25)",
+        plainAction: pnum === "3"
+          ? "Insert the White wire (removed from T42 Pin 28) into T42 Pin 3 for 4L80E Front Input Speed Sensor High."
+          : "Insert the Tan/Black wire (removed from T42 Pin 25) into T42 Pin 26 for 4L80E Front Input Speed Sensor Low."
+      };
+    }
+  }
+
   // 4L80E Repin Alerts directly on the 20-Pin Round Transmission Plug
   if (transCfg === "4l80e" && conn.id === "4L60_80_20") {
     if (pnum === "S") {
@@ -117,21 +147,21 @@ function computeVerdictWithConfig(pinObj, ecm, conn, cfg) {
       return {
         status: "external",
         shortLabel: "Fan 1 (Add Pin)",
-        badgeText: "Fan 1 Low Relay (Add Pin)",
-        plainAction: "99-06 trucks came with mechanical fans so C1-42 is usually empty. Push a PCM terminal into C1-42 to trigger Low-Speed Fan Relay #1 (PCM supplies ground)."
+        badgeText: "Fan 1 Low Relay (Add/Wire)",
+        plainAction: "99-04 mechanical-fan trucks have C1-42 empty (05-07 electric-fan trucks already have Dark Green populated). Trigger Low-Speed Fan Relay #1 Pin 85 (PCM supplies ground)."
       };
     }
     if (conn.id === "C2" && pnum === "33") {
       return {
         status: "external",
         shortLabel: "Fan 2 (Add Pin)",
-        badgeText: "Fan 2 High Relay (Add Pin)",
-        plainAction: "Add or connect C2-33 to trigger High-Speed Fan Relay #2/#3 (PCM supplies ground)."
+        badgeText: "Fan 2 High Relay (Add/Wire)",
+        plainAction: "Add or connect C2-33 (populated Dark Blue on 05-07 electric-fan trucks) to trigger High-Speed Fan Relay #2/#3 Pin 85 (PCM supplies ground)."
       };
     }
   }
 
-  // DBC Conversion Alerts on 03-07 P59
+  // DBC Conversion Alerts on 03-07 P59 (C1 Blue + C2 Green)
   if (throttleCfg === "dbc" && ecm.id === "gen3_03_07_vortec") {
     if (conn.id === "C1" && (pnum === "14" || pnum === "15")) {
       return {
@@ -141,17 +171,27 @@ function computeVerdictWithConfig(pinObj, ecm, conn, cfg) {
         plainAction: "Depin TAC module serial wires on C1-14 & C1-15 when converting to a cable throttle body."
       };
     }
-    if (conn.id === "C1" && ["8", "24", "76", "77", "78", "79"].includes(pnum)) {
+    if (conn.id === "C1" && (pnum === "8" || pnum === "60")) {
+      return {
+        status: "repin",
+        shortLabel: "Add DBC TPS",
+        badgeText: "DBC TPS 5V / Low Ref",
+        plainAction: "Populate C1 Blue Pin 8 (TPS 5V Ref) and Pin 60 (TPS Low Ref) along with C2 Green Pin 24 (TPS Signal) for cable throttle!"
+      };
+    }
+    if (conn.id === "C2" && ["24", "76", "77", "78", "79"].includes(pnum)) {
       return {
         status: "repin",
         shortLabel: "Add DBC Wire",
-        badgeText: "DBC TPS / IAC Pin",
-        plainAction: "Populate C1-8 (TPS 5V), C1-24 (TPS Signal), and C1-76..79 (IAC Coils) for cable throttle. Verify your P59 PCM has the B67U1 IAC chip!"
+        badgeText: pnum === "24" ? "DBC TPS Signal (C2-24)" : "DBC IAC Stepper Pin",
+        plainAction: "Populate C2 Green Pin 24 (TPS Signal) and C2 Green Pins 76–79 (4-wire IAC Stepper Coils) for cable throttle. Verify your P59 PCM has the internal B67U1 IAC driver chip!"
       };
     }
   }
 
-  if (status === "empty") {
+  const fnTrim = String(pinObj.function || "").trim();
+  const wireTrim = String(pinObj.wire || "").trim();
+  if (status === "empty" || ((wireTrim === "--" || wireTrim === "") && /^(not used|not available|--)$/i.test(fnTrim))) {
     return { status: "empty", shortLabel: "Empty", badgeText: "Empty Cavity", plainAction: "" };
   }
 
@@ -174,7 +214,7 @@ function computeVerdictWithConfig(pinObj, ecm, conn, cfg) {
   }
 
   if (flags.includes("trans") || status === "trans") {
-    if (ckt === "821" || ckt === "822" || ckt === "400" || ckt === "401") {
+    if (conn.id !== "T42" && (ckt === "821" || ckt === "822" || ckt === "400" || ckt === "401")) {
       return {
         status: "keep",
         shortLabel: "Keep (VSS)",
@@ -185,6 +225,12 @@ function computeVerdictWithConfig(pinObj, ecm, conn, cfg) {
     return transCfg === "manual"
       ? { status: "remove", shortLabel: "Remove (Manual)", badgeText: "Remove (No Auto Trans)", plainAction: "Not needed with a manual or non-electronic automatic transmission." }
       : { status: "trans", shortLabel: "Auto Trans", badgeText: "Keep (Auto Trans)", plainAction: "" };
+  }
+
+  if (flags.includes("manual_trans") && status !== "remove") {
+    return transCfg === "manual"
+      ? { status: "keep", shortLabel: "Manual Trans", badgeText: "Keep (Manual Trans)", plainAction: "Keep connected for manual transmission operation." }
+      : { status: "remove", shortLabel: "Remove (Auto)", badgeText: "Remove (Manual Only)", plainAction: "Used only on manual-transmission harnesses; safe to depin on automatic swaps." };
   }
 
   if (throttleCfg === "dbc" && flags.includes("dbw")) {
@@ -576,6 +622,7 @@ function buildConnectorSVG(ecm, conn, opts) {
     });
 
     uniquePinIds.forEach(k => {
+      if (k.toUpperCase() === "D6-D7" && pinMap[k] && pinMap[k].verdict.status === "empty") return;
       const m = k.match(/^([A-F])(\d+)(?:-[A-F]?(\d+))?$/i);
       if (m) {
         const r = rows.indexOf(m[1].toUpperCase());

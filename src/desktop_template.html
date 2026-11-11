@@ -998,8 +998,8 @@
             <tr><td><strong>Pin 2</strong></td><td>PPL or DK GRN</td><td>J1850 VPW Serial Data</td><td><strong>Gen III (97–07):</strong> PCM C1 Blue Pin 58 (or C2-58 on 97–98 LS1)</td></tr>
             <tr><td><strong>Pin 4</strong></td><td>BLK</td><td>Chassis Ground</td><td>Engine block / chassis ground</td></tr>
             <tr><td><strong>Pin 5</strong></td><td>BLK/WHT</td><td>Signal Ground</td><td>Engine block / chassis ground</td></tr>
-            <tr><td><strong>Pin 6</strong></td><td>TN/BK or D-BU</td><td>HS-GMLAN CAN (+)</td><td><strong>Gen IV / V:</strong> ECM/TCM CAN+ (Add 120Ω resistor across Pins 6 &amp; 14!)</td></tr>
-            <tr><td><strong>Pin 14</strong></td><td>TN or WH</td><td>HS-GMLAN CAN (-)</td><td><strong>Gen IV / V:</strong> ECM/TCM CAN-</td></tr>
+            <tr><td><strong>Pin 6</strong></td><td>TN or D-BU</td><td>HS-GMLAN CAN (+)</td><td><strong>Gen IV / V:</strong> ECM/TCM CAN+ (Add 120Ω resistor across Pins 6 &amp; 14!)</td></tr>
+            <tr><td><strong>Pin 14</strong></td><td>TN/BK or WH</td><td>HS-GMLAN CAN (-)</td><td><strong>Gen IV / V:</strong> ECM/TCM CAN-</td></tr>
             <tr><td><strong>Pin 16</strong></td><td>ORN or RD/WH</td><td>Battery 12V+ Constant</td><td>10A/15A Constant B+ Fuse (powers scanner / tuning interface)</td></tr>
           </tbody>
         </table>
@@ -1017,7 +1017,7 @@
           </thead>
           <tbody>
             <tr><td><strong>99–07 Gen III (P01 / P59)</strong></td><td>C1 Blue <strong>Pin 42</strong> (DK GRN, 335)</td><td>C2 Red/Green <strong>Pin 33</strong> (DK BLU, 473)</td></tr>
-            <tr><td><strong>97–98 Gen III LS1</strong></td><td>C1 Red <strong>Pin 46</strong> (DK GRN, 335)</td><td>C2 Blue <strong>Pin 68</strong> (DK BLU, 473)</td></tr>
+            <tr><td><strong>97–98 Gen III LS1</strong></td><td>C1 Red <strong>Pin 46</strong> (DK GRN, 335)</td><td>C2 Blue <strong>Pin 28</strong> (DK BLU, 473)</td></tr>
             <tr><td><strong>07–15 Gen IV E38</strong></td><td>X1 Black <strong>Pin 58</strong> (D-GN, 335)</td><td>X1 Black <strong>Pin 17</strong> (D-BU, 473)</td></tr>
             <tr><td><strong>05–06 Gen IV E40</strong></td><td>C1 Blue <strong>Pin 36</strong> (D-GN, 335)</td><td>C1 Blue <strong>Pin 56</strong> (L-BU, 473)</td></tr>
             <tr><td><strong>07–15 Gen IV E67</strong></td><td>C3 Gray <strong>Pin 49</strong> (D-GN, 335)</td><td>C1 Blue <strong>Pin 54</strong> (L-BU, 473)</td></tr>
@@ -1035,7 +1035,7 @@
           </thead>
           <tbody>
             <tr><td><strong>1. Constant B+ (15A)</strong></td><td>X1 Pin 20 (RD/WH)</td><td>X1 Pin 20 — X102 Pin 1</td><td>X1 Pin 52 + 6L80 Pin 4</td></tr>
-            <tr><td><strong>2. Key-On Run/Crank (15A)</strong></td><td>X1 Pin 19 (PK)</td><td>X1 Pin 19 — X3 Pin 14</td><td>X1 Pin 51 + X1-70 + 6L80 Pin 9/12</td></tr>
+            <tr><td><strong>2. Key-On Run/Crank (15A)</strong></td><td>X1 Pin 19 + X1-18 Wakeup</td><td>X1 Pin 19 (X3-14) + X1-18</td><td>X1 Pin 51 + X1-70 + 6L80 Pin 9 (+ Pin 6 Wakeup)</td></tr>
             <tr><td><strong>3. Powertrain Relay Trigger</strong></td><td>X1 Pin 59 (YE, 5991)</td><td>X1 Pin 59 — X3 Pin 6</td><td>X1 Pin 72 (YE, 5991)</td></tr>
             <tr><td><strong>4. Powertrain Relay Feeds</strong></td><td>X1 Pin 47 + Coils/Inj/MAF/O2</td><td>X1 Pin 47 + X3 Pins 1,2,9,16,19</td><td>X1 Pins 62, 67, 73 + Coils/MAF/O2</td></tr>
           </tbody>
@@ -1059,30 +1059,33 @@
         <p style="font-size:13px;color:var(--muted);margin:0 0 8px;">Repurpose the unused 3-2 Downshift (White) and TCC On/Off (Tan/Black) wires for the 2-pin 4L80E front Input Speed Sensor (ISS), and move Brown TCC PWM into Pin S:</p>
         <table class="mini-table">
           <thead>
-            <tr><th>Step</th><th>At 20-Pin Round Trans Plug</th><th>At 99–07 Gen III PCM</th><th>At 96–00 L31 VCM</th></tr>
+            <tr><th>Step</th><th>At 20-Pin Round Plug</th><th>At 99–07 Gen III PCM</th><th>At Gen IV T42 TCM (49-Pin)</th><th>At 96–00 L31 VCM</th></tr>
           </thead>
           <tbody>
             <tr>
-              <td><strong>1. White Wire</strong></td>
+              <td><strong>1. White Wire (687)</strong></td>
               <td>Pull White out of <strong>Pin S</strong></td>
               <td>Move <strong>C1-79</strong> ➔ <strong>C2-22</strong> (ISS High)</td>
+              <td>Move <strong>Pin 28</strong> ➔ <strong>Pin 3</strong> (ISS High)</td>
               <td>Move <strong>C1-13</strong> ➔ <strong>C3-7</strong></td>
             </tr>
             <tr>
-              <td><strong>2. Tan/Blk Wire</strong></td>
+              <td><strong>2. Tan/Blk Wire (422)</strong></td>
               <td>Pull Tan/Blk out of <strong>Pin T</strong></td>
               <td>Move <strong>C2-42</strong> ➔ <strong>C2-23</strong> (ISS Low)</td>
+              <td>Move <strong>Pin 25</strong> ➔ <strong>Pin 26</strong> (ISS Low)</td>
               <td>Move <strong>C1-10</strong> ➔ <strong>C3-8</strong></td>
             </tr>
             <tr>
-              <td><strong>3. Brown Wire</strong></td>
+              <td><strong>3. Brown Wire (418)</strong></td>
               <td>Move Brown from <strong>Pin U</strong> ➔ <strong>Pin S</strong>! Seal T &amp; U.</td>
               <td>Keep at <strong>C2-2</strong> (TCC PWM)</td>
+              <td>Keep at <strong>Pin 2</strong> (TCC PWM)</td>
               <td>Keep in place</td>
             </tr>
             <tr>
               <td><strong>4. ISS Plug</strong></td>
-              <td colspan="3">Install a 2-pin 4L80E ISS pigtail onto the pulled White &amp; Tan/Black wires (polarity doesn't matter) and flash a 4L80E segment into the PCM.</td>
+              <td colspan="4">Install a 2-pin 4L80E front ISS pigtail onto the pulled White &amp; Tan/Black wires and flash a 4L80E segment into your PCM or T42 TCM.</td>
             </tr>
           </tbody>
         </table>
@@ -1120,28 +1123,28 @@
               <tr><th>Circuit Function</th><th>Wire Color</th><th>1997–1998 PCM Pin</th><th>➔ Move To 1999–2002 (0411) Pin</th></tr>
             </thead>
             <tbody>
-              <tr><td>PCM Ground</td><td>BLK/WHT (451)</td><td>RED 79, RED 80, BLUE 20, BLUE 60</td><td><strong>BLUE 1, BLUE 40, RED 1, RED 40</strong></td></tr>
-              <tr><td>Battery Positive 12V+ Constant</td><td>ORN (440)</td><td>BLUE 57, BLUE 73</td><td><strong>BLUE 20, BLUE 57</strong></td></tr>
+              <tr><td>PCM Ground</td><td>BLK / BLK/WHT (451)</td><td>RED 72, RED 76, BLUE 21, BLUE 60</td><td><strong>BLUE 1, BLUE 40, RED 1, RED 40</strong></td></tr>
+              <tr><td>Battery Positive 12V+ Constant</td><td>ORN (340/440)</td><td>BLUE 20, BLUE 61</td><td><strong>BLUE 20, BLUE 57</strong></td></tr>
               <tr><td>Ignition 1 Switched 12V+</td><td>PNK (439)</td><td>BLUE 19</td><td><strong>BLUE 19</strong></td></tr>
-              <tr><td>Fuel Pump Relay Control (12V+)</td><td>DK GRN/WHT (465)</td><td>RED 19</td><td><strong>RED 9</strong></td></tr>
+              <tr><td>Fuel Pump Relay Control (12V+)</td><td>DK GRN/WHT (465)</td><td>BLUE 37</td><td><strong>RED 9</strong></td></tr>
               <tr><td>Engine Speed (Tachometer) Output</td><td>WHT (121)</td><td>BLUE 35</td><td><strong>RED 10</strong></td></tr>
-              <tr><td>Check Engine Light (MIL) Control</td><td>BRN/WHT (419)</td><td>BLUE 3</td><td><strong>RED 46</strong></td></tr>
+              <tr><td>Check Engine Light (MIL) Control</td><td>BRN/WHT (419)</td><td>RED 37</td><td><strong>RED 46</strong></td></tr>
               <tr><td>Class 2 Serial Data (OBD2 Pin 2)</td><td>PPL (1807)</td><td>BLUE 58</td><td><strong>BLUE 58</strong></td></tr>
-              <tr><td>Fuel Injectors 1, 2, 3, 4</td><td>BLK, LT GRN/BLK, PNK/BLK, LT BLU/BLK</td><td>RED 36, BLUE 38, RED 9, RED 12</td><td><strong>BLUE 36 (1), BLUE 4 (2), BLUE 3 (3), BLUE 44 (4)</strong></td></tr>
-              <tr><td>Fuel Injectors 5, 6, 7, 8</td><td>BLK/WHT, YEL/BLK, RED/BLK, DK BLU/WHT</td><td>RED 15, RED 18, BLUE 1, BLUE 39</td><td><strong>BLUE 43 (5), BLUE 42 (6), BLUE 77 (7), BLUE 76 (8)</strong></td></tr>
-              <tr><td>Ignition Coils 1, 2, 3, 4</td><td>PPL, RED/WHT, LT BLU, DK GRN/WHT</td><td>RED 39, RED 13, RED 37, RED 60</td><td><strong>RED 66 (1), RED 26 (2), RED 67 (3), RED 27 (4)</strong></td></tr>
-              <tr><td>Ignition Coils 5, 6, 7, 8</td><td>DK GRN, LT BLU/WHT, RED, PPL/WHT</td><td>RED 59, RED 10, RED 38, RED 78</td><td><strong>RED 68 (5), RED 28 (6), RED 69 (7), RED 29 (8)</strong></td></tr>
-              <tr><td>Ignition Coil Low Ref Bank 1 &amp; 2</td><td>BRN (2129), BRN/WHT (2130)</td><td>RED 40, RED 76</td><td><strong>RED 60 (Bank 1), RED 25 (Bank 2)</strong></td></tr>
-              <tr><td>Crankshaft Position (12V, Sig, Low)</td><td>LT GRN, DK BLU/WHT, YEL/BLK</td><td>BLUE 29, RED 32, RED 57</td><td><strong>BLUE 2 (12V), BLUE 12 (Sig), BLUE 21 (Low)</strong></td></tr>
-              <tr><td>Camshaft Position (12V, Sig, Low)</td><td>RED, BRN/WHT, PNK/BLK</td><td>BLUE 29, RED 4, RED 52</td><td><strong>BLUE 39 (12V), BLUE 73 (Sig), BLUE 61 (Low)</strong></td></tr>
-              <tr><td>Knock Sensor 1 &amp; 2</td><td>DK BLU (496), LT BLU (1876)</td><td>BLUE 49, BLUE 11</td><td><strong>BLUE 51 (KS1), BLUE 11 (KS2)</strong></td></tr>
-              <tr><td>ECT Coolant Temp Sig &amp; Low</td><td>YEL (410), TAN (470)</td><td>BLUE 68, BLUE 24</td><td><strong>BLUE 74 (Sig), BLUE 80 (Low)</strong></td></tr>
-              <tr><td>MAP Sensor 5V, Sig, Low</td><td>GRY, LT GRN, ORN/BLK</td><td>BLUE 72, BLUE 52, RED 51</td><td><strong>RED 48 (5V), RED 32 (Sig), BLUE 54 (Low)</strong></td></tr>
-              <tr><td>TPS 5V, Sig, Low</td><td>GRY, DK BLU, BLK</td><td>BLUE 65, BLUE 45, BLUE 24</td><td><strong>BLUE 8 (5V), BLUE 24 (Sig), BLUE 53 (Low)</strong></td></tr>
-              <tr><td>IAC Coils A Hi/Lo &amp; B Hi/Lo</td><td>LT GRN/WHT, LT GRN/BLK, LT BLU/WHT, LT BLU/BLK</td><td>RED 49, RED 29, RED 27, RED 28</td><td><strong>BLUE 76, BLUE 77, BLUE 78, BLUE 79</strong></td></tr>
-              <tr><td>MAF Signal &amp; IAT Signal</td><td>YEL (492), TAN (472)</td><td>BLUE 15, BLUE 69</td><td><strong>RED 31 (MAF), BLUE 25 (IAT)</strong></td></tr>
-              <tr><td>Cooling Fan #1 &amp; Fan #2</td><td>DK GRN (335), DK BLU (473)</td><td>RED 46, BLUE 68</td><td><strong>BLUE 42 (Fan 1), RED 33 (Fan 2)</strong></td></tr>
-              <tr><td>VSS High, Low, &amp; Speedo Out</td><td>PPL/WHT, LT GRN/BLK, DK GRN/WHT</td><td>RED 7, RED 5, BLUE 5</td><td><strong>RED 21 (Hi), RED 20 (Lo), RED 50 (Out)</strong></td></tr>
+              <tr><td>Fuel Injectors 1, 2, 3, 4</td><td>BLK, LT GRN/BLK, PNK/BLK, LT BLU/BLK</td><td>RED 33, RED 23, RED 9, RED 12</td><td><strong>BLUE 36 (1), BLUE 4 (2), BLUE 3 (3), BLUE 44 (4)</strong></td></tr>
+              <tr><td>Fuel Injectors 5, 6, 7, 8</td><td>BLK/WHT, YEL/BLK, RED/BLK, DK BLU/WHT</td><td>RED 15, RED 18, RED 27, RED 31</td><td><strong>BLUE 76 (5), BLUE 37 (6), BLUE 43 (7), BLUE 77 (8)</strong></td></tr>
+              <tr><td>Ignition Coils 1, 2, 3, 4</td><td>PPL, RED/WHT, LT BLU, DK GRN/WHT</td><td>RED 49, RED 13, RED 58, RED 57</td><td><strong>RED 26 (1), RED 67 (2), RED 69 (3), RED 29 (4)</strong></td></tr>
+              <tr><td>Ignition Coils 5, 6, 7, 8</td><td>DK GRN, LT BLU/WHT, RED, PPL/WHT</td><td>RED 56, RED 54, RED 53, RED 52</td><td><strong>RED 68 (5), RED 28 (6), RED 27 (7), RED 66 (8)</strong></td></tr>
+              <tr><td>Ignition Coil Low Ref Bank 1 &amp; 2</td><td>BRN (2129), BRN/WHT (2130)</td><td>RED 60, RED 59</td><td><strong>RED 60 (Bank 1), RED 61 (Bank 2)</strong></td></tr>
+              <tr><td>Crankshaft Position (12V, Sig, Low)</td><td>LT GRN, YEL, YEL/BLK</td><td>BLUE 62, RED 44, BLUE 22</td><td><strong>BLUE 2 (12V), BLUE 12 (Sig), BLUE 21 (Low)</strong></td></tr>
+              <tr><td>Camshaft Position (12V, Sig, Low)</td><td>RED, BRN/WHT, PNK/BLK</td><td>BLUE 4, RED 4, BLUE 70</td><td><strong>RED 39 (12V), BLUE 73 (Sig), BLUE 61 (Low)</strong></td></tr>
+              <tr><td>Knock Sensor 1 (Front) &amp; 2 (Rear)</td><td>DK BLU (496), LT BLU (1876)</td><td>BLUE 69, BLUE 68</td><td><strong>BLUE 51 (KS1), BLUE 11 (KS2)</strong></td></tr>
+              <tr><td>ECT Coolant Temp Sig &amp; Low</td><td>YEL (410), BRN (718)</td><td>BLUE 49, BLUE 25</td><td><strong>BLUE 74 (Sig), BLUE 80 (Low)</strong></td></tr>
+              <tr><td>MAP Sensor 5V, Sig, Low</td><td>GRY, LT GRN, ORN/BLK</td><td>BLUE 64, BLUE 48, BLUE 26</td><td><strong>BLUE 48 (5V), RED 32 (Sig), BLUE 54 (Low)</strong></td></tr>
+              <tr><td>TPS 5V, Sig, Low</td><td>GRY, DK BLU, BLK</td><td>BLUE 43, BLUE 12, BLUE 23</td><td><strong>BLUE 8 (5V), RED 24 (Sig), BLUE 60 (Low)</strong></td></tr>
+              <tr><td>IAC Coils B Lo, B Hi, A Lo, A Hi</td><td>LT GRN/BLK, LT GRN/WHT, LT BLU/BLK, LT BLU/WHT</td><td>BLUE 54, BLUE 57, BLUE 55, BLUE 56</td><td><strong>RED 76 (B Lo), RED 77 (B Hi), RED 78 (A Lo), RED 79 (A Hi)</strong></td></tr>
+              <tr><td>MAF Signal, IAT Sig &amp; IAT Low</td><td>YEL (492), TAN (472), PPL (719)</td><td>RED 48, BLUE 8, RED 21</td><td><strong>RED 31 (MAF), RED 25 (IAT Sig), RED 57 (IAT Low)</strong></td></tr>
+              <tr><td>Cooling Fan #1 &amp; Fan #2</td><td>DK GRN (335), DK BLU (473)</td><td>RED 46, BLUE 28</td><td><strong>BLUE 42 (Fan 1), RED 33 (Fan 2)</strong></td></tr>
+              <tr><td>VSS High, Low, &amp; Speedo Out</td><td>YEL, PPL, DK GRN/WHT</td><td>RED 7, RED 71, RED 55</td><td><strong>RED 21 (Hi), RED 20 (Lo), RED 50 (Out)</strong></td></tr>
             </tbody>
           </table>
         </div>
@@ -1399,7 +1402,7 @@
             <td><strong>Fan 1 / Fan 2</strong></td>
             <td>C1-<strong>42</strong> / C2-<strong>33</strong></td>
             <td>C1-<strong>42</strong> / C2-<strong>33</strong></td>
-            <td>C1-<strong>46</strong> / C2-<strong>68</strong></td>
+            <td>C1-<strong>46</strong> / C2-<strong>28</strong></td>
             <td>X1-<strong>58</strong> / X1-<strong>17</strong></td>
             <td>C1-<strong>36</strong> / C1-<strong>56</strong></td>
             <td>C3-<strong>49</strong> / C1-<strong>54</strong></td>
@@ -1599,6 +1602,9 @@ function renderCurrentConnector() {
   updateHeaderProgress();
   if (selectedPinNum !== null) {
     inspectPin(selectedPinNum, undefined, false);
+  } else {
+    document.getElementById("pinInspectorBox").innerHTML =
+      '<span style="color:var(--muted);font-size:12.5px;">👆 Click any cavity on the factory connector diagram above (or any row below) to inspect wire color, circuit #, and hookup instructions.</span>';
   }
 }
 
