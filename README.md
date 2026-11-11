@@ -2,7 +2,12 @@
 
 A 100% self-contained, offline standalone application containing **2,537 circuit pinout entries** across **45 factory OEM-shaped connectors** and **12 major GM ECM / PCM / TCM families** sourced from `lt1swap.com` and GM / Aptiv / Molex / Kostal factory service specifications.
 
-## How to Launch / Install
+## Live Web App (GitHub Pages — Zero Install)
+- **Launch Hub:** **[https://amberkalvin.github.io/LS-Pinout-Pro/](https://amberkalvin.github.io/LS-Pinout-Pro/)**
+- **Mobile & Offline iOS/Android PWA:** **[https://amberkalvin.github.io/LS-Pinout-Pro/ios_pwa/](https://amberkalvin.github.io/LS-Pinout-Pro/ios_pwa/)** *(In Safari on iPhone/iPad, tap **Share ➔ Add to Home Screen** for full-screen offline shop mode)*
+- **Desktop Pinout Workbench:** **[https://amberkalvin.github.io/LS-Pinout-Pro/LS_Swap_Pinout_Master.html](https://amberkalvin.github.io/LS-Pinout-Pro/LS_Swap_Pinout_Master.html)**
+
+## How to Launch / Install Locally
 - **Native iOS IPA & Xcode App (`LS_Pinout_Pro_iOS_Dark.ipa` + `ios_app/` — iPhone & iPad Universal, iOS 15.0+):**
   - **Prebuilt iOS `.ipa` (`LS_Pinout_Pro_iOS_Dark.ipa`):** Compiled Release ARM64 iOS package ready to sideload onto any iPhone or iPad via **AltStore, SideStore, Sideloadly, Feather, or TrollStore** (and automatically rebuilt in the cloud via `.github/workflows/build-ios-ipa.yml`).
   - **Xcode Build / Direct Device Install:** Open **`ios_app/LSPinoutPro.xcodeproj`** in Xcode on macOS, select your Apple ID under *Signing & Capabilities*, and press **Run (`⌘R`)** to install directly onto your iPhone or iPad (or run `./ios_app/build_ipa.sh` locally). Features native `UIImpactFeedbackGenerator` haptics, `UserDefaults` storage backup, left-edge swipe navigation, dark `UIAlertController` dialogs, and iPad-safe `UIActivityViewController` JSON file sharing.

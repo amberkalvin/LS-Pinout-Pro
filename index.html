@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0B0D12">
+  <link rel="icon" type="image/png" href="./ios_pwa/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./ios_pwa/apple-touch-icon.png">
+  <title>LS Pinout Pro — GM LS / LT Swap ECM, PCM &amp; TCM Workbench</title>
+  <style>
+    :root {
+      --bg: #0B0D12;
+      --surface: #141821;
+      --surface-2: #1C2230;
+      --border: rgba(255, 255, 255, 0.1);
+      --text: #F8FAFC;
+      --muted: #8B98AD;
+      --blue: #38BDF8;
+      --green: #34D399;
+      --purple: #C084FC;
+      --amber: #FBBF24;
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at 50% 0%, #172033 0%, var(--bg) 60%);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+    .wrap {
+      width: 100%;
+      max-width: 680px;
+    }
+    .hero {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+    .hero img {
+      width: 68px;
+      height: 68px;
+      border-radius: 16px;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+      flex-shrink: 0;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(56, 189, 248, 0.16);
+      color: var(--blue);
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+    h1 {
+      margin: 0 0 4px;
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .sub {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    @media (min-width: 560px) {
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-top: 12px;
+      }
+    }
+    a.card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      transition: transform 0.12s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+    a.card:hover {
+      border-color: rgba(56, 189, 248, 0.45);
+      background: var(--surface-2);
+      transform: translateY(-1px);
+    }
+    a.card.primary {
+      border-color: rgba(56, 189, 248, 0.38);
+      background: linear-gradient(180deg, rgba(56, 189, 248, 0.1) 0%, var(--surface) 100%);
+    }
+    .card-tag {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+    .card h2 {
+      margin: 0 0 6px;
+      font-size: 17px;
+      font-weight: 700;
+    }
+    .card p {
+      margin: 0;
+      font-size: 13.5px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+    .footer {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 12.5px;
+      color: var(--muted);
+    }
+    .footer a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="hero">
+      <img src="./ios_pwa/apple-touch-icon.png" alt="LS Pinout Pro Icon">
+      <div>
+        <h1>LS Pinout Pro <span class="badge">v2.1</span></h1>
+        <p class="sub">12 GM LS / LT Controller Families &bull; 45 Exact Factory OEM Connectors &bull; 2,537 Verified Pins</p>
+      </div>
+    </div>
+
+    <div class="grid">
+      <a class="card primary" href="./ios_pwa/">
+        <div class="card-tag" style="color: var(--blue);">iPhone &bull; iPad &bull; Android Web App (Offline PWA)</div>
+        <h2>Launch Mobile App &rarr;</h2>
+        <p>Optimized touch interface with OEM connector zoom &amp; wire check-offs. On iPhone/iPad Safari, tap <strong>Share &rarr; Add to Home Screen</strong> for full-screen offline shop use.</p>
+      </a>
+
+      <a class="card" href="./LS_Swap_Pinout_Master.html">
+        <div class="card-tag" style="color: var(--green);">Desktop &bull; Laptop &bull; Tablet Widescreen</div>
+        <h2>Launch Desktop Pinout Workbench &rarr;</h2>
+        <p>Full multi-pane standalone harness builder with side-by-side OEM connector diagrams, circuit search, RPO filters, and printable pinout sheets.</p>
+      </a>
+    </div>
+
+    <div class="grid grid-2" style="margin-top: 12px;">
+      <a class="card" href="https://github.com/amberkalvin/LS-Pinout-Pro/releases/download/v2.1.0/LS_Pinout_Pro_iOS_Dark.apk">
+        <div class="card-tag" style="color: var(--amber);">Android 7.0+ Native Package</div>
+        <h2>Download Android .APK</h2>
+        <p>Signed offline APK (<code>v2.1.0</code>) with native haptics &amp; share sheet.</p>
+      </a>
+
+      <a class="card" href="https://github.com/amberkalvin/LS-Pinout-Pro/releases/download/v2.1.0/LS_Pinout_Pro_iOS_Dark.ipa">
+        <div class="card-tag" style="color: var(--purple);">iOS 15.0+ Native ARM64 Package</div>
+        <h2>Download iOS .IPA</h2>
+        <p>Universal iPhone/iPad <code>.ipa</code> for AltStore, SideStore, Sideloadly, or TrollStore.</p>
+      </a>
+    </div>
+
+    <div class="footer">
+      <a href="https://github.com/amberkalvin/LS-Pinout-Pro">View Source &amp; Releases on GitHub</a>
+    </div>
+  </main>
+</body>
+</html>
